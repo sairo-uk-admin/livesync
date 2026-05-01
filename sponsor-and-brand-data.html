@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Always-on Live Hub on Roblox - EMV Analysis | LIVESYNC</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root{
+    --blue:#0036db;
+    --white:#ffffff;
+    --black:#252525;
+    --red:#e52626;
+    --bg:#ffffff;
+    --ink:#252525;
+    --ink-dim:#555e72;
+    --line:#d4dae8;
+    --panel:#f4f6fb;
+    --panel-2:#e8edf7;
+  }
+  *{box-sizing:border-box}
+  html{font-size:clamp(11px, 1.25vw, 20px)}
+  html,body{
+    margin:0;padding:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Raleway',sans-serif;
+    font-weight:400;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    font-size:clamp(11px, 1.25vw, 20px);
+  }
+  a{color:var(--blue);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:min(1350px, 92vw);margin:0 auto;padding:5rem 2.5rem 7.5rem}
+  .header-bar{background:var(--blue);padding:0 2.5rem;height:0.45rem;position:fixed;top:0;left:0;right:0;z-index:100;}
+  h1{font-size:clamp(2rem, 5vw, 3.75rem);line-height:1.05;margin:0 0 0.5rem;font-weight:700;color:var(--ink);letter-spacing:-0.02em;}
+  h2{font-size:clamp(1.5rem, 3vw, 2.25rem);line-height:1.2;margin:4.5rem 0 1.25rem;font-weight:700;color:var(--blue);letter-spacing:-0.01em;border-top:2px solid var(--blue);padding-top:2.5rem;}
+  h3{font-size:1.1rem;margin:1.25rem 0 0.5rem;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:0.04em;}
+  p{color:var(--ink-dim);margin:0.4rem 0 0.9rem;font-size:1rem}
+  strong{color:var(--ink);font-weight:700}
+  .bullet{border-left:4px solid var(--blue);padding:0.8rem 0 0.8rem 1.2rem;margin:0.8rem 0;font-size:1rem;color:var(--ink-dim);}
+  .bullet strong{color:var(--ink)}
+  .eyebrow{font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;color:var(--blue);margin-bottom:1.25rem;display:inline-flex;align-items:center;gap:0.6rem;}
+  .eyebrow::before{content:"";display:inline-block;width:0.45rem;height:0.45rem;background:var(--red);border-radius:50%;}
+  .subtitle{color:var(--ink-dim);font-size:1.35rem;margin:0 0 0.9rem;font-weight:400}
+  .meta{color:var(--ink-dim);font-size:0.85rem;margin-top:1.25rem;border-top:1px solid var(--line);padding-top:1rem}
+  .toc{border:1px solid var(--line);border-radius:1.25rem;padding:1.75rem 2rem;margin:3rem 0 0;display:grid;grid-template-columns:1fr 1fr;gap:0.5rem 2.5rem;}
+  .toc>div{display:flex;flex-direction:column;}
+  .toc a{display:block;padding:0.3rem 0;font-size:0.9rem;color:var(--black);font-weight:600;border-bottom:1px solid var(--line);}
+  .toc>div:first-child a:last-child,.toc>div:last-child a:last-child{border-bottom:none}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:1.25rem;padding:1.5rem 1.75rem;margin:1rem 0;}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin:1rem 0}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1rem 0}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:1.25rem;padding:1.25rem}
+  .stat .label{color:var(--ink-dim);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.07em;font-weight:700}
+  .stat .value{color:var(--blue);font-size:1.95rem;font-weight:700;margin-top:0.35rem;letter-spacing:-0.02em}
+  .stat .sub{color:var(--ink-dim);font-size:0.75rem;margin-top:0.25rem}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:0.9rem}
+  th,td{text-align:left;padding:0.65rem 0.75rem;border-bottom:1px solid var(--line);color:var(--ink)}
+  th{color:var(--white);font-weight:700;background:var(--blue);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.04em}
+  td strong{color:var(--ink)}
+  tbody tr:hover{background:var(--panel)}
+  .note{font-size:0.75rem;color:var(--ink-dim);border-top:1px dashed var(--line);padding-top:0.75rem;margin-top:1rem}
+  .chart-wrap{border:1px solid var(--line);border-radius:1.25rem;padding:1.5rem;margin:1.25rem 0;position:relative;height:clamp(240px, 30vw, 480px);background:var(--panel);}
+  .formula{background:var(--blue);color:var(--white);padding:1rem 1.25rem;border-radius:1.25rem;margin:1rem 0;font-size:1.1rem;font-weight:700;}
+  .calc{background:var(--panel);border:1px solid var(--line);border-radius:1.25rem;padding:1.5rem 1.75rem;margin:1.25rem 0}
+  .calc label{display:block;color:var(--ink);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.07em;font-weight:700;margin-top:1.25rem;}
+  .calc input[type=range]{width:100%;margin-top:0.5rem;accent-color:var(--blue);height:4px;}
+  .out{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-top:1.25rem}
+  .out .stat .value{color:var(--blue)}
+  .helper{color:var(--ink-dim);font-size:0.75rem;margin-top:0.25rem}
+  .helper .slider-val{color:var(--ink);font-size:1.3rem;font-weight:700}
+  ul{padding-left:1.25rem;color:var(--ink-dim);font-size:1rem}
+  ul li{margin-bottom:0.4rem}
+  ul li strong{color:var(--ink)}
+  ol{padding-left:1.25rem;color:var(--ink-dim);font-size:1rem;margin:0}
+  ol li{margin-bottom:0.6rem}
+  @media(max-width:800px){
+    .wrap{padding:3.5rem 1.25rem 5rem}
+    .grid,.grid-3,.out{grid-template-columns:1fr}
+  }
+  @media(max-width:500px){
+    .toc{grid-template-columns:1fr}
+    .toc>div:first-child{border-bottom:1px solid var(--line);margin-bottom:0;}
+    .toc>div:first-child a:last-child{border-bottom:none;padding-bottom:0.3rem}
+    .toc>div:last-child a:first-child{padding-top:0.3rem}
+  }
+</style>
+</head>
+<body>
+<div class="header-bar"></div>
+<div class="wrap">
+
+  <div class="eyebrow">Earned media value analysis</div>
+  <h1>Always-on Live Hub on Roblox</h1>
+  <p class="subtitle">The data-driven case for an always-on fan world</p>
+  <p class="meta">Prepared by LIVESYNC | May 2026 | Confidential</p>
+
+  <!-- 11 -->
+  <h2 id="calculator" style="border-top:none;padding-top:0;margin-top:2rem">Interactive calculator</h2>
+  <p>This calculator estimates the total monthly value of the always-on live hub. Use the four sliders to model different scenarios. The outputs combine earned media value (impressions x CPM) with projected in-game spend revenue.</p>
+
+  <div class="calc">
+    <label for="visits">1. Monthly visits <span style="font-weight:400;text-transform:none;letter-spacing:0">(proxy for impressions reach)</span></label>
+    <input type="range" id="visits" min="100000" max="3000000" step="50000" value="500000">
+    <div class="helper"><span id="visitsOut" class="slider-val">500,000</span> visits/mo <span style="opacity:0.7">- FIFA Super Soccer 20.79M/mo - NFL Universe Football 8.64M/mo</span></div>
+
+    <label for="session">2. Session retention - average session length (minutes)</label>
+    <input type="range" id="session" min="2" max="20" step="0.5" value="9">
+    <div class="helper"><span id="sessionOut" class="slider-val">9.0</span> min/session <span style="opacity:0.7">- FIFA Super Soccer 9.55 - NFL Universe 16.85 - Rotrends top-10 avg 11.8</span></div>
+
+    <label for="d1">3. Long-term retention - D1 % (proxy for algorithm pickup)</label>
+    <input type="range" id="d1" min="5" max="20" step="0.5" value="12">
+    <div class="helper"><span id="d1Out" class="slider-val">12.0%</span> day-1 return rate</div>
+
+    <label for="cpmInput">CPM (£) - default £12, adjustable for sensitivity</label>
+    <input type="range" id="cpmInput" min="5" max="25" step="0.5" value="12">
+    <div class="helper"><span id="cpmOut" class="slider-val">£12</span> blended CPM</div>
+
+    <div class="out">
+      <div class="stat"><div class="label">Impressions / visit</div><div class="value"><span id="impPerVisit">18</span></div><div class="sub">session x 60 / 30</div></div>
+      <div class="stat"><div class="label">Monthly EMV</div><div class="value">£<span id="emvMonth">259,200</span></div><div class="sub">visits x imp x CPM / 1,000</div></div>
+      <div class="stat"><div class="label">6-month EMV</div><div class="value">£<span id="emv6">1,555,200</span></div><div class="sub">baseline, no growth curve</div></div>
+      <div class="stat"><div class="label">Retention multiplier</div><div class="value"><span id="retMult">1.40</span>x</div><div class="sub">D1 vs 10% baseline</div></div>
+      <div class="stat"><div class="label">Monthly spend revenue</div><div class="value">£<span id="rev">180,000</span></div><div class="sub">visits x payer conversion x ARPPU</div></div>
+      <div class="stat"><div class="label">Total monthly value</div><div class="value">£<span id="total">614,880</span></div><div class="sub">(EMV x retention) + revenue</div></div>
+    </div>
+  </div>
+  <p class="note">Default values: 500k visits/mo, 9 min session (just under FIFA Super Soccer), 12% D1 (sports genre top decile is 12.35%). Spend revenue uses fixed sports-genre benchmarks: 1.71% payer conversion x 288 R$ ARPPU (~£2.88) applied to monthly visits.</p>
+
+  <p class="note" style="margin-top:56px">Sources: GEEIQ "Football in Virtual Worlds" 2025 (citing Sportcal 2024 and SQ Magazine 2025), RoMonitor Stats branded experiences (Apr 2026), Rotrends Sports &amp; Racing and Sports category pages (Apr 2026), MediaScience 2025, Gupta Media CPM Tracker 2025, Ofcom Children &amp; Media 2025, Attest Gen Alpha 2025, Roblox Q4 2025 investor letter, internal creator dashboards.</p>
+
+
+  <nav class="toc" aria-label="Contents">
+    <p style="grid-column:1/-1;margin:0 0 0.75rem;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink)">Contents</p>
+    <div>
+      <a href="#summary">1. Executive summary</a>
+      <a href="#flywheel">2. The gaming-to-viewership flywheel</a>
+      <a href="#audience">3. Where the audience is</a>
+      <a href="#category">4. A proven, undervalued category</a>
+      <a href="#attention">5. Attention quality</a>
+      <a href="#gap">6. The engagement time gap</a>
+    </div>
+    <div>
+      <a href="#cpm">7. CPM benchmarks</a>
+      <a href="#pillar-sponsorship">8. Commercial pillar 1: in-world sponsorship</a>
+      <a href="#pillar-goods">9. Commercial pillar 2: virtual goods</a>
+      <a href="#pillar-pipeline">10. Commercial pillar 3: subscriber pipeline</a>
+      <a href="#calculator">11. Interactive calculator</a>
+    </div>
+  </nav>
+
+  <!-- 1 -->
+  <h2 id="summary">1. Executive summary</h2>
+  <div class="bullet"><strong>Sports fans who game watch more sport.</strong> Football fans who play video games are 45% more likely to watch 3+ matches per week than casual fans, and spend an average of 10.3 hours gaming each week (GEEIQ, citing Sportcal 2024 and SQ Magazine 2025). Roblox could be a feeder channel to an always-on live hub.</div>
+  <div class="bullet"><strong>The next generation of sports viewers is already on Roblox.</strong> 7-14 year olds spend more time on Roblox than on any other entertainment platform. The Sports &amp; Racing category on Roblox hosts 1,857 games with 30.4B lifetime visits and 304k concurrent players - a global top-25 genre (Rotrends, Apr 2026).</div>
+  <div class="bullet"><strong>The category is proven and the window is narrowing.</strong> 50 football brands have activated in virtual worlds, 87 branded football activations across platforms, integrations up 390% since 2024 (GEEIQ). FIFA acquired its own Roblox game. Adidas hosts 14 clubs in Football Festival. The Premier League launched a Roblox hub.</div>
+  <div class="bullet"><strong>Branded attention on Roblox is 100x higher than social ads</strong>, with 211% better brand recall (MediaScience 2025). A 10-minute session is worth 20x a 30-second TV spot.</div>
+  <div class="bullet"><strong>Four metrics are modelled below:</strong> impressions per session, session retention, player spend, long-term retention. Each is argued separately and combined in an interactive calculator (section 11).</div>
+
+  <!-- 2 -->
+  <h2 id="flywheel">2. The gaming-to-viewership flywheel</h2>
+  <p>Gaming doesn't steal attention from TV. The data says the opposite: football fans who game are the highest-intent sports viewers in the market.</p>
+  <div class="grid-3">
+    <div class="stat"><div class="label">More likely to watch 3+ matches/week</div><div class="value">+45%</div><div class="sub">gamer fans vs casual fans (GEEIQ / Sportcal 2024)</div></div>
+    <div class="stat"><div class="label">Weekly gaming time</div><div class="value">10.3 hrs</div><div class="sub">football fans who game (GEEIQ / SQ Magazine 2025)</div></div>
+    <div class="stat"><div class="label">Football entities activating in virtual worlds</div><div class="value">50</div><div class="sub">clubs, leagues, federations (GEEIQ 2025)</div></div>
+  </div>
+  <p>The behaviour generalises: the same fan who plays a virtual football game is the same fan who watches the Premier League, and the same logic applies to basketball, tennis, F1, cricket and rugby, as the Roblox category data below demonstrates. An always-on live hub is an acquisition channel for the fans with the highest lifetime value.</p>
+
+  <!-- 3 -->
+  <h2 id="audience">3. Where the next generation of sports viewers spends time</h2>
+  <p>7-14 year olds, minutes per day, UK-comparable sources (Ofcom Children &amp; Media 2025 / Attest Gen Alpha 2025).</p>
+  <div class="chart-wrap"><canvas id="audienceChart"></canvas></div>
+
+  <div class="card">
+    <h3>Roblox category scale: Sports &amp; Racing</h3>
+    <p>The Sports &amp; Racing genre on Roblox is a global top-25 category. Pure Sports accounts for 82% of visits within it.</p>
+    <div class="grid-3">
+      <div class="stat"><div class="label">Sports &amp; Racing games live</div><div class="value">1,857</div><div class="sub">global genre rank #21 (Rotrends, Apr 2026)</div></div>
+      <div class="stat"><div class="label">Lifetime visits across the genre</div><div class="value">30.4B</div><div class="sub">25.0B from pure Sports alone</div></div>
+      <div class="stat"><div class="label">Concurrent players (April 10, 2026)</div><div class="value">304k</div><div class="sub">272k in pure Sports</div></div>
+    </div>
+    <p class="note">Source: Rotrends, Sports &amp; Racing and Sports category pages, May 2026. Average rating across the category is 91-92% - a quality-sensitive audience that is not tolerating bad games.</p>
+  </div>
+
+  <!-- 4 -->
+  <h2 id="category">4. A proven, undervalued category</h2>
+  <p>Public data shows the category is mature, the activations work, and the audience spans every major sport.</p>
+
+  <div class="card">
+    <h3>Top sports-IP branded experiences on Roblox</h3>
+    <p>Source: RoMonitor Stats, branded experiences deep dive, May 2026. Ranked by lifetime visits. Top 4 shown; the full list runs to 200+ titles.</p>
+    <table>
+      <thead><tr><th>Title</th><th>Owner</th><th>Lifetime visits</th><th>Visits (14d)</th><th>Peak CCU</th><th>Avg session</th><th>Rating</th></tr></thead>
+      <tbody>
+        <tr><td><strong>FIFA Super Soccer!</strong></td><td>Play! Football</td><td><strong>1.1B</strong></td><td>20.79M</td><td>21.09k</td><td>9.55 min</td><td>81.9%</td></tr>
+        <tr><td><strong>NFL Universe Football</strong></td><td>NFL x Voldex</td><td>632.5M</td><td>8.64M</td><td>16.52k</td><td><strong>16.85 min</strong></td><td>89.7%</td></tr>
+        <tr><td>AO Tennis Adventure</td><td>Australian Open</td><td>37.1M</td><td>382k</td><td>211</td><td>4.28 min</td><td>78.1%</td></tr>
+        <tr><td>Wimbledon: Tennis Showdown</td><td>Wimbledon</td><td>29.8M</td><td>28.8k</td><td>24</td><td>5.90 min</td><td>77.9%</td></tr>
+      </tbody>
+    </table>
+    <p class="note">The average session length across all 200+ branded Roblox experiences is 5.36 minutes (RoMonitor, Apr 2026). FIFA Super Soccer nearly doubles it. NFL Universe Football more than triples it. Sports IP is the top-performing sub-category of branded Roblox.</p>
+  </div>
+
+  <div class="card">
+    <h3>Non-branded sports titles: the wider audience</h3>
+    <p class="note" style="border-top:none;padding-top:0;margin-top:0;margin-bottom:12px">Data: Rotrends, Sports &amp; Racing, May 2026. Top 8 shown; the category-wide average of 11.8 min is computed from the full Rotrends top-10 ranking.</p>
+    <table>
+      <thead><tr><th>Title</th><th>Sport</th><th>Lifetime visits</th><th>Peak CCU</th><th>Avg session</th><th>Rating</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Blue Lock: Rivals</strong></td><td>Football</td><td><strong>4.55B</strong></td><td>34,417</td><td>12.7 min</td><td>96.6%</td></tr>
+        <tr><td><strong>Volleyball Legends</strong></td><td>Volleyball</td><td>3.18B</td><td>44,865</td><td>12.6 min</td><td>95.5%</td></tr>
+        <tr><td>Realistic Street Soccer</td><td>Football</td><td>1.15B</td><td>12,881</td><td>9.5 min</td><td>85.2%</td></tr>
+        <tr><td>Basketball: Zero</td><td>Basketball</td><td>977M</td><td>12,802</td><td><strong>15.7 min</strong></td><td><strong>98.4%</strong></td></tr>
+        <tr><td>Basketball Legends</td><td>Basketball</td><td>677M</td><td>6,070</td><td>14.2 min</td><td>84.5%</td></tr>
+        <tr><td>Racket Rivals</td><td>Tennis</td><td>400M</td><td>19,897</td><td>9.8 min</td><td>95.2%</td></tr>
+        <tr><td>Azure Latch</td><td>Football</td><td>441M</td><td>6,144</td><td>13.5 min</td><td>96.9%</td></tr>
+        <tr><td>Neo Tennis</td><td>Tennis</td><td>148M</td><td>19,110</td><td>6.8 min</td><td>85.4%</td></tr>
+      </tbody>
+    </table>
+    <p style="font-weight:700;color:var(--ink);margin:20px 0 10px">3 things to pull out of this table</p>
+    <ol>
+      <li>The top 10 spans football, basketball, tennis and volleyball - every major live sport code already has a proven Roblox audience.</li>
+      <li>The average session length across these titles is 11.8 min versus the category-wide 4.3 min - the top of the market runs nearly 3x the category floor.</li>
+      <li>5 of 8 titles sit above 95% rating - the quality bar for a team-sport Roblox game is high.</li>
+    </ol>
+  </div>
+
+  <div class="grid-3">
+    <div class="stat"><div class="label">Branded football activations tracked</div><div class="value">87</div><div class="sub">majority on Roblox (GEEIQ 2025)</div></div>
+    <div class="stat"><div class="label">Integration growth</div><div class="value">+390%</div><div class="sub">football integrations since 2024 (GEEIQ)</div></div>
+    <div class="stat"><div class="label">Volleyball Legends sale</div><div class="value">~$30M</div><div class="sub">reported sale price, 2025</div></div>
+  </div>
+
+  <div class="card">
+    <h3>3 moves that change the category</h3>
+    <div style="display:flex;flex-direction:column;gap:1.5rem;margin-top:1rem">
+
+      <div style="display:grid;grid-template-columns:9rem 1fr;align-items:center;gap:20px">
+        <div style="width:9rem;display:flex;align-items:center;justify-content:center">
+          <img src="data:image/png;base64,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" alt="FIFA" style="width:9rem;height:auto;display:block">
+        </div>
+        <p style="margin:0"><strong>FIFA acquired its own Roblox game.</strong> GEEIQ's read: a major signal of long-term commitment - FIFA is moving beyond licensing into owning virtual football infrastructure.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:9rem 1fr;align-items:center;gap:20px">
+        <div style="width:9rem;display:flex;align-items:center;justify-content:center">
+          <img src="data:image/png;base64,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" alt="Adidas" style="width:5.5rem;height:auto;display:block">
+        </div>
+        <p style="margin:0"><strong>Adidas hosts 14 clubs in Roblox Football Festival.</strong> A scalable sponsorship model bringing multiple clubs into one shared fan experience.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:9rem 1fr;align-items:center;gap:20px">
+        <div style="width:9rem;display:flex;align-items:center;justify-content:center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 269.04 342.49" style="width:4.5rem;height:auto;display:block"><!-- Source: https://football-logos.cc --><path d="M430.79 369.07a131.3 131.3 0 0 1 26.76 17c-.66-4-3.76-22.78-5.75-34.29 8.63 6 29.42 20.35 36.05 25 2.65-8.41 12.39-36.05 12.39-36.05s17.25 27.67 19.91 32.27c3.76-3.54 24.11-26.54 29.42-32.29 1.11 13.05 2 32.07 2.43 34.73a131.5 131.5 0 0 1 22.12-22.78c-5.75 11.28-8.41 26.76-9.73 39.37a147 147 0 0 0-40.7-5.75A150.8 150.8 0 0 0 448.92 406c-3.76-12.16-9.73-27.2-18.13-36.93m207.48 237.56-11.94-13.27c-3.32 35.61-21 66.14-53.09 87.37l-5.09-19.24c-27.43 19.69-74.1 32.29-114.36 9.73 5.09-25.44 9.29-51.32 0-82.28-22.34 34.29-42 48-42 48-15-25.44-13.71-76.09-9.29-91.13l-25 7.74c0-17 12.39-53.09 30.08-73.44l-15.26-2.43a148.3 148.3 0 0 1 46-54.64c-6 9.73-6 32.29 11.06 40.92-7.3-12.61-8-28.31-.66-36.72 7.74-8.41 20.35-5.31 28.31 1.11-2.43-7.08-9.73-15.93-19.91-16.59 19.91-10.4 43.13-15.93 67-15.93 4.65 0 9.07.44 13.27.66 7.08 2.65 17.25 12.61 22.12 19a35.1 35.1 0 0 0-3.76-15.93c26.1 6.41 38.71 17 43.8 22.12 1.11 11.28 4.42 17.92 9.07 28.76-8.41-9.29-29.64-24.77-40-28.31 0 0-1.11 9.73-4.42 14.38-20.35-14.6-30.08-18.36-30.08-18.36-22.56 2.21-36.5 11.06-44.46 17.7l6.64 5.75c-13.27 4-22.12 15.7-22.12 15.7 0 .44 11.94 2 11.94 2s-1.33 13.94 16.37 22.78c15 7.3 36.28-1.77 56.63 6.41-13.27-15.26-22.34-22.34-22.34-22.34a55.5 55.5 0 0 0-9.07-1.11c-4.65 0-11.72 1.11-19-2-3.76-1.33-8-4-11.06-6 0 0 9.29-9.73 23-11.72 0 0 12.39 3.32 22.12 10.62 6.41-6.41 13.27-6 13.27-6s-6.64 6.41-4.65 13.71a256 256 0 0 1 20.35 21c10.62-6 34.06-4.65 38.93 1.11-6-8-15-14.38-21.68-19.91-.66-3.1-8.41-13.27-9.29-14.38a45.9 45.9 0 0 1 13.27 7.74 16.85 16.85 0 0 1 9.73-6.41c4.65 4 5.75 10 5.31 11.06a12.84 12.84 0 0 1-4.42 3.76l11.28 12.39 1.11-9.07c26.27 37.48 40.65 81.06 22.29 135.69m-49.55-80.74v-19.24a61.8 61.8 0 0 1-17.92-10c-18.58 2.65-40.92 21.46-40.92 21.46s7.74 14.38 15.93 30.08c14.6 1.59 36.27-16.54 42.91-22.3m18.58 34.95a33.26 33.26 0 0 0-8-15.26L585 546s-19.69 16.59-31.41 17l10 18.58c6.64-1.33 17.92-6.64 22.78-11.94a68.4 68.4 0 0 1 2.43 21.68c6.55-4.15 15.62-14.32 18.5-30.48m6-63.7a148 148 0 0 1-13.3 9.73v19.24c5.31 5.75 10.4 10.62 14.38 19.24 7.3-12.82 5.53-32.06-1.11-48.21Z" style="fill:#37003c" transform="translate(-377.48 -340.75)" data-source="https://football-logos.cc"></path><!-- source: https://football-logos.cc --></svg>
+        </div>
+        <p style="margin:0"><strong>The Premier League launched its own Roblox hub.</strong></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <h2 id="attention">5. Attention quality: why a Roblox minute is worth more than a TV second</h2>
+  <div class="grid-3">
+    <div class="stat"><div class="label">vs social ads</div><div class="value">100x</div><div class="sub">branded attention uplift (MediaScience 2025)</div></div>
+    <div class="stat"><div class="label">Brand recall</div><div class="value">+211%</div><div class="sub">vs social ads (MediaScience 2025)</div></div>
+    <div class="stat"><div class="label">Voluntary engagement</div><div class="value">100%</div><div class="sub">opt-in, no skip, no mute</div></div>
+  </div>
+  <p>MediaScience supports a 2-3x premium quality multiplier, but the EMV model (the calculator in section 11) excludes this entirely. The conversion from duration to impressions alone is sufficient and showcases more conservative numbers than MediaScience's approach would produce.</p>
+
+  <!-- 6 -->
+  <h2 id="gap">6. The engagement time gap</h2>
+  <p>A matchday pre-roll buys 15-30 seconds of passive attention. A Roblox hub buys 9-17 minutes of active engagement, repeated per session, across multiple sessions a week. The sports IPs in section 4 prove the session lengths are achievable.</p>
+  <div class="card">
+    <h3>Per-visit conversion</h3>
+    <p>Session (min) x 60 / 30 = equivalent 30-second impression count.</p>
+    <p>At the NFL Universe Football benchmark: <strong>16.85 min session = ~34 impression-equivalents per visit</strong>.</p>
+    <p>At the FIFA Super Soccer benchmark: <strong>9.55 min = ~19 impression-equivalents per visit</strong>.</p>
+    <p>At the Rotrends top-10 sports average: <strong>11.8 min = ~24 impression-equivalents per visit</strong>.</p>
+  </div>
+
+  <!-- 7 -->
+  <h2 id="cpm">7. CPM benchmarks by channel</h2>
+  <p>The industry-standard blended CPM for Roblox (£12, Gupta Media 2025) is conservative against typical linear and digital video rates in UK sport.</p>
+  <div class="chart-wrap"><canvas id="cpmChart"></canvas></div>
+  <p class="note">Linear TV sports, YouTube pre-roll and TikTok in-feed values are directional ranges from Gupta Media 2025 and WARC.</p>
+
+  <!-- 8 -->
+  <h2 id="pillar-sponsorship">8. Commercial pillar 1: In-world sponsorship</h2>
+  <p>New virtual, deeply integrated advertising inventory that complements existing channels. The metrics behind this pillar are impressions per session and session retention. The EMV methodology and live calculator follow the metric arguments.</p>
+
+  <h3 style="margin-top:32px">Metric 1 - impressions per session</h3>
+  <p>How many impressions does each player generate? Session minutes converted to 30-second ad-equivalents.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>LIVESYNC Benchmarks</h3>
+      <p><strong>Find the Blippis:</strong> 20 impressions/visit</p>
+      <p><strong>Littlest Pet Shop:</strong> 22 impressions/visit</p>
+      <p><strong>Sparkles Magical Market:</strong> 24 impressions/visit</p>
+      <p><strong>Chupa Chups Skate &amp; Create:</strong> 24 impressions/visit</p>
+    </div>
+    <div class="card">
+      <h3>Sports IP comparisons (RoMonitor / Rotrends, Apr 2026)</h3>
+      <p><strong>NFL Universe Football:</strong> 33.7 impressions/visit</p>
+      <p><strong>Basketball: Zero:</strong> 31.4 impressions/visit</p>
+      <p><strong>FIFA Super Soccer:</strong> 19.1 impressions/visit</p>
+      <p><strong>Rotrends top-10 sports avg:</strong> 23.6 impressions/visit</p>
+    </div>
+  </div>
+  <p>Target for the always-on live hub: 9-14 minutes per session, producing 18-28 impressions per visit. That sits between FIFA Super Soccer and NFL Universe Football, and aligns with our range.</p>
+
+  <h3 style="margin-top:32px">Metric 2 - session retention</h3>
+  <p>Session retention is the lever that compounds in-world sponsorship value. Double the session time, double the impression count per visit.</p>
+  <div class="card">
+    <table>
+      <thead><tr><th>Reference</th><th>Avg session (min)</th></tr></thead>
+      <tbody>
+        <tr><td>NFL Universe Football</td><td>16.85</td></tr>
+        <tr><td>Basketball: Zero</td><td>15.7</td></tr>
+        <tr><td>Basketball Legends</td><td>14.2</td></tr>
+        <tr><td>Blue Lock: Rivals</td><td>12.7</td></tr>
+        <tr><td>Volleyball Legends</td><td>12.6</td></tr>
+        <tr><td>FIFA Super Soccer</td><td>9.55</td></tr>
+        <tr><td>Racket Rivals (tennis)</td><td>9.8</td></tr>
+        <tr><td>Rotrends top-10 sports avg</td><td>11.8</td></tr>
+        <tr><td>Chupa Chups Skate &amp; Create</td><td>12.1</td></tr>
+        <tr><td>Find the Blippis</td><td>10.2</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Sources: RoMonitor 14d and Rotrends, Apr 2026; internal dashboards. Top sports-IP titles run ~3x the branded-Roblox average. The titles at the bottom of the ranking (McLaren F1 Experience at 1.11 min) show the IP alone is not the differentiator - the build and the live data are.</p>
+  </div>
+
+  <h3 style="margin-top:32px">EMV methodology</h3>
+  <p>Duration-adjusted impressions. No quality multiplier. The most conservative defensible approach - deliberately understated.</p>
+  <div class="formula">EMV = Visits x Impressions-per-visit x CPM / 1,000</div>
+  <div class="card">
+    <ul>
+      <li><strong>Visits:</strong> monthly, from RoMonitor or creator dashboard once live</li>
+      <li><strong>Impressions per visit:</strong> session-minutes x 60 / 30 (a 30-sec ad-equivalent unit)</li>
+      <li><strong>CPM:</strong> £12.00 blended (Gupta Media 2025), conservative against linear sport</li>
+    </ul>
+    <p class="note">MediaScience supports a 2-3x premium - this quality multiplier is deliberately excluded.</p>
+  </div>
+
+  <!-- 9 -->
+  <h2 id="pillar-goods">9. Commercial pillar 2: Virtual goods</h2>
+  <p>Rights Holder's IP and partner brands sold directly inside the game world. Unique assets designed to build brand equity. The metric behind this pillar is player spend.</p>
+
+  <h3 style="margin-top:32px">Metric 3 - player spend potential</h3>
+  <p>Player spend on Roblox maps to Robux economy metrics: payer conversion rate and ARPDAU. For a sports hub, the spend drivers are kit drops, stadium skins, matchday gear, celebration emotes, and limited-edition event passes.</p>
+  <div class="card">
+    <h3>Economy benchmarks (Sports genre)</h3>
+    <p><strong>Payer conversion rate, 90th percentile:</strong> 1.71%</p>
+    <p><strong>Average revenue per paying user:</strong> 288 R$ (~£2.88)</p>
+    <p class="note">Market signal: Volleyball Legends (sports Roblox title) sold for a reported $30M in 2025.</p>
+  </div>
+
+  <!-- 10 -->
+  <h2 id="pillar-pipeline">10. Commercial pillar 3: Subscriber pipeline</h2>
+  <p>Live-viewing habits with young fans, transformed into Rights Holders' fans and broadcasters' subscribers tomorrow. The metric behind this pillar is long-term retention; the conversion mechanic is the in-game-to-pass bridge.</p>
+
+  <h3 style="margin-top:32px">Metric 4 - long-term retention (D1 / D7 / D30)</h3>
+  <p>Long-term retention is what tells Roblox's discovery algorithm to promote the game. It is also what proves the audience is compounding into a subscriber pipeline.</p>
+  <div class="grid-3">
+    <div class="stat"><div class="label">D1 benchmark (Sports Genre Top Decile)</div><div class="value">12.35%</div><div class="sub">algorithmic promotion threshold</div></div>
+    <div class="stat"><div class="label">D7 benchmark</div><div class="value">3.07%</div><div class="sub">indicates repeat-visit habit</div></div>
+    <div class="stat"><div class="label">D30 benchmark</div><div class="value">2-4%</div><div class="sub">durable audience formation</div></div>
+  </div>
+  <p>Live sports data is a structural retention lever. When the hub updates on matchday, players have a reason to return. The LIVESYNC integration makes every matchday a retention event by default.</p>
+
+  <h3 style="margin-top:32px">The conversion mechanic</h3>
+  <p>The direct revenue line: measurable conversion from Roblox engagement to live sport subscriptions. Bridges available via eGEN, Shopify and Roblox AMP.</p>
+  <div class="grid-3">
+    <div class="stat"><div class="label">Chipotle</div><div class="value">28.4M</div><div class="sub">Roblox visits to in-store redemptions</div></div>
+    <div class="stat"><div class="label">Hilton</div><div class="value">27,000</div><div class="sub">loyalty sign-ups via Roblox</div></div>
+    <div class="stat"><div class="label">Superdrug</div><div class="value">15,000</div><div class="sub">store visits from a 1.2M-visit game</div></div>
+  </div>
+  <p><strong>The mechanic:</strong> an in-game challenge unlocks promotional rewards. Measurable, attributable, and it closes the loop from the next-gen audience to the broadcast product.</p>
+
+
+</div>
+
+<script>
+  const BLUE = '#0036db', WHITE = '#ffffff', LINE = '#d4dae8', BLACK = '#252525', DIM = '#555e72';
+  Chart.defaults.color = DIM;
+  Chart.defaults.font.family = "'Raleway', sans-serif";
+  Chart.defaults.font.weight = '600';
+  Chart.defaults.borderColor = LINE;
+
+  new Chart(document.getElementById('audienceChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Roblox', 'YouTube', 'TikTok', 'Netflix', 'Other gaming'],
+      datasets: [{
+        label: 'Minutes per day (ages 7-14)',
+        data: [150, 107, 91, 49, 38],
+        backgroundColor: [BLUE, '#1a52e8', '#3366f0', '#6688f5', '#99aaee'],
+        borderRadius: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: (ctx) => ctx.parsed.y + ' min/day' } }
+      },
+      scales: {
+        x: { grid: { color: LINE }, ticks: { color: BLACK, font: { family: "'Raleway', sans-serif", weight: '600' } } },
+        y: { grid: { color: LINE }, ticks: { color: DIM, callback: v => v + ' min', font: { family: "'Raleway', sans-serif" } }, beginAtZero: true }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('cpmChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Linear TV (UK sport)', 'YouTube pre-roll', 'TikTok in-feed', 'Roblox (blended)'],
+      datasets: [{
+        label: 'CPM (£)',
+        data: [28, 15, 9, 12],
+        backgroundColor: ['#99aaee', '#6688f5', '#3366f0', BLUE],
+        borderRadius: 3
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: (ctx) => '£' + ctx.parsed.x + ' CPM' } }
+      },
+      scales: {
+        x: { grid: { color: LINE }, ticks: { color: DIM, callback: v => '£' + v, font: { family: "'Raleway', sans-serif" } }, beginAtZero: true },
+        y: { grid: { display: false }, ticks: { color: BLACK, font: { family: "'Raleway', sans-serif", weight: '600' } } }
+      }
+    }
+  });
+
+  const $ = id => document.getElementById(id);
+  const fmt = n => Math.round(n).toLocaleString('en-GB');
+  const f1 = n => Number(n).toFixed(1);
+
+  function recalc(){
+    const visits = +$('visits').value;
+    const session = +$('session').value;
+    const d1 = +$('d1').value;
+    const cpm = +$('cpmInput').value;
+    $('visitsOut').textContent = fmt(visits);
+    $('sessionOut').textContent = f1(session);
+    $('d1Out').textContent = f1(d1) + '%';
+    $('cpmOut').textContent = '£' + (cpm % 1 === 0 ? Math.round(cpm) : f1(cpm));
+    const impPerVisit = session * 60 / 30;
+    const emvMonth = visits * impPerVisit * cpm / 1000;
+    const retMult = Math.max(0.5, Math.min(3, d1 / 10));
+    const payerConv = 0.0171;
+    const arppu = 2.88;
+    const revMonth = visits * payerConv * arppu;
+    const emv6 = emvMonth * 6;
+    const total = (emvMonth * retMult) + revMonth;
+    $('impPerVisit').textContent = f1(impPerVisit);
+    $('emvMonth').textContent = fmt(emvMonth);
+    $('emv6').textContent = fmt(emv6);
+    $('retMult').textContent = retMult.toFixed(2);
+    $('rev').textContent = fmt(revMonth);
+    $('total').textContent = fmt(total);
+  }
+
+  ['visits','session','d1','cpmInput'].forEach(id => $(id).addEventListener('input', recalc));
+  recalc();
+</script>
+</body>
+</html>
