@@ -225,7 +225,9 @@
     }
 
     /* Timeline */
-    .timeline-wrap { margin-top: 20px; min-width: 640px; }
+    .timeline-wrap { margin-top: 20px; }
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .data-table table { min-width: 760px; }
 
     .timeline-header-row { display: flex; margin-bottom: 14px; }
     .timeline-header-row .spacer { width: 90px; flex-shrink: 0; }
@@ -290,7 +292,7 @@
       th, td { padding: 8px 8px 8px 0; }
     }
 
-    /* Mobile: stack data tables into cards instead of squeezing 5 columns */
+    /* Mobile: keep real tables (scroll horizontally if they need to), shrink everything else to fit */
     @media (max-width: 640px) {
       body { padding: 16px; }
       .top-bar, .bottom-bar { padding: 10px 16px; margin-left: -16px; margin-right: -16px; }
@@ -303,65 +305,21 @@
       .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
       .stat-card { padding: 16px; }
 
-      table { table-layout: auto; }
-      thead { display: none; }
+      table { font-size: 0.72rem; }
+      th, td { padding: 6px 6px 6px 0; }
 
-      tbody tr {
-        display: block;
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 14px;
-        margin-bottom: 12px;
-      }
-      tbody tr:last-child { margin-bottom: 0; }
+      /* Timeline: resize to fit the viewport instead of scrolling */
+      .timeline-row .row-label, .timeline-header-row .spacer { width: 44px; }
+      .timeline-header-row .month-header { font-size: 0.55rem; letter-spacing: -0.02em; }
+      .timeline-track { height: 22px; }
+      .timeline-row { margin-bottom: 10px; }
+      .timeline-legend { font-size: 0.65rem; gap: 10px; }
+      .legend-swatch { width: 11px; height: 11px; }
+    }
 
-      td {
-        display: block;
-        width: 100% !important;
-        border-bottom: none;
-        padding: 6px 0;
-        white-space: normal;
-      }
-
-      td.num { text-align: left; padding-right: 0; }
-
-      td[data-label]::before {
-        content: attr(data-label);
-        display: block;
-        font-size: 0.65rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: var(--black);
-        opacity: 0.45;
-        margin-bottom: 2px;
-      }
-
-      td.mobile-hide { display: none; }
-
-      tr.total {
-        background: var(--panel);
-        border-color: var(--border);
-      }
-      tr.total td { border-top: none; padding-top: 6px; }
-      tr.total td:first-child { padding-top: 0; }
-
-      /* Priority breakdown table: keep it compact rather than fully stacked */
-      section:nth-of-type(2) tbody tr {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: 6px;
-        padding: 12px 14px;
-      }
-      section:nth-of-type(2) td { display: inline-block; width: auto !important; padding: 0; }
-      section:nth-of-type(2) td[data-label]::before { display: none; }
-      section:nth-of-type(2) td[data-label="Priority"] { width: 100% !important; margin-bottom: 4px; }
-
-      .timeline-row .row-label, .timeline-header-row .spacer { width: 60px; }
-      .timeline-header-row .month-header { font-size: 0.65rem; }
-      .timeline-legend { font-size: 0.7rem; gap: 12px; }
+    @media (max-width: 420px) {
+      .timeline-row .row-label, .timeline-header-row .spacer { width: 34px; }
+      .timeline-header-row .month-header { font-size: 0.48rem; }
     }
   </style>
 </head>
@@ -394,7 +352,7 @@
 <section>
 <h2>Pricing Summary</h2>
 <p>Hourly rate £62/hr</p>
-<table>
+<div class="table-scroll"><table>
 <colgroup>
 <col style="width:34%;"/><col style="width:18%;"/><col style="width:18%;"/><col style="width:30%;"/>
 </colgroup>
@@ -426,7 +384,7 @@
 <td class="num" data-label="Cost"><strong>£105,772 – £139,872</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 </section>
 <!-- Estimated Timeline -->
 <section>
@@ -483,7 +441,7 @@
 <section>
 <h2>Design</h2>
 <p>10 items · 216–268h</p>
-<table>
+<div class="table-scroll data-table"><table>
 <colgroup>
 <col class="col-func"/><col class="col-comp"/><col class="col-tech"/><col class="col-priority"/><col class="col-hours"/>
 </colgroup>
@@ -573,13 +531,13 @@
 <td class="num" data-label="Hours"><strong>216–268h</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 </section>
 <!-- Mobile Section -->
 <section>
 <h2>Mobile</h2>
 <p>36 items · 675–898h</p>
-<table>
+<div class="table-scroll data-table"><table>
 <colgroup>
 <col class="col-func"/><col class="col-comp"/><col class="col-tech"/><col class="col-priority"/><col class="col-hours"/>
 </colgroup>
@@ -851,13 +809,13 @@
 <td class="num" data-label="Hours"><strong>675–898h</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 </section>
 <!-- Backend Section -->
 <section>
 <h2>Backend</h2>
 <p>30 items · 530–714h</p>
-<table>
+<div class="table-scroll data-table"><table>
 <colgroup>
 <col class="col-func"/><col class="col-comp"/><col class="col-tech"/><col class="col-priority"/><col class="col-hours"/>
 </colgroup>
@@ -871,37 +829,6 @@
 </tr>
 </thead>
 <tbody>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <tr>
 <td data-label="Functionality"><strong>Project setup &amp; architecture</strong></td>
 <td data-label="Components">NestJS service scaffolding, Supabase project + Postgres schema design (cards, inventory, squads, ledger, ladder, seasons, pass), OpenAPI schema definition, RLS baseline policies, environment configuration, lint/format</td>
@@ -1087,7 +1014,7 @@
 <td class="mobile-hide"></td>
 <td class="num" data-label="Hours"><strong>530–714h</strong></td>
 </tr></tbody>
-</table>
+</table></div>
 </section>
 <!-- Project Management -->
 <section>
