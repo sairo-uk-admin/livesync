@@ -45,6 +45,18 @@
       margin: calc(-1 * var(--pad)) calc(-1 * var(--pad)) 48px calc(-1 * var(--pad));
     }
 
+    .mobile-notice {
+      display: none;
+      background: var(--red);
+      color: var(--white);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-align: center;
+      padding: 8px 16px;
+      margin: -16px -16px 16px -16px;
+    }
+
     h1 {
       font-size: clamp(1.8rem, 4vw, 2.8rem);
       font-weight: 700;
@@ -302,11 +314,19 @@
       h1 { font-size: 1.5rem; }
       p { max-width: 100%; }
 
+      .mobile-notice { display: block; }
+
       .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
       .stat-card { padding: 16px; }
 
       table { font-size: 0.72rem; }
       th, td { padding: 6px 6px 6px 0; }
+
+      /* Main tables: resize to fit the screen instead of forcing horizontal scroll */
+      .data-table table { min-width: 0; width: 100%; }
+      .data-table td, .data-table th { font-size: 0.64rem; line-height: 1.4; padding: 5px 5px 5px 0; }
+      .data-table td[data-label], .data-table th { word-break: break-word; }
+      .data-table .priority-tag { padding: 2px 5px; font-size: 0.58rem; }
 
       /* Timeline: resize to fit the viewport instead of scrolling */
       .timeline-row .row-label, .timeline-header-row .spacer { width: 44px; }
@@ -328,9 +348,10 @@
   </style>
 </head>
 <body>
+<div class="mobile-notice">Best viewed on desktop.</div>
 <div class="top-bar">LIVESYNC Project Estimation</div>
 <h1>PFA Mobile Card Game</h1>
-<p class="subtitle">We recommend starting with design to reduce and further refine the scope</p>
+<p class="subtitle">We recommend starting with design to reduce and further refine the scope.</p>
 <!-- Summary Stats -->
 <section>
 <h2>Summary</h2>
