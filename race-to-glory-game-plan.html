@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Race to Glory Game Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap">
+<style>
+  /* Layout: one A4-like column, LIVESYNC chrome (blue top bar + footer), tabs under the title. Light-only by brand rule. */
+  :root {
+    --blue: #0036db;
+    --white: #ffffff;
+    --black: #252525;
+    --red: #e52626;
+    --panel: #f4f6fb;
+    --border: #d4dae8;
+    --font: 'Raleway', 'Helvetica Neue', Arial, sans-serif;
+    --num: 'Verdana Pro', Verdana, Geneva, sans-serif;
+    color-scheme: light;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { background: var(--white); }
+  body { font-family: var(--font); color: var(--black); font-size: 15px; line-height: 1.6; }
+  .num { font-family: var(--num); font-variant-numeric: tabular-nums; }
+
+  .top-bar {
+    background: var(--blue); color: var(--white);
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    padding-block: 10px; padding-inline: clamp(16px, 5vw, 64px);
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding-inline: clamp(16px, 5vw, 48px); padding-block: clamp(28px, 5vw, 56px) 0; }
+
+  h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.15; margin: 0 0 0.4em; text-wrap: balance; }
+  h2 { font-size: clamp(1.1rem, 2.5vw, 1.35rem); font-weight: 700; margin: 0 0 0.6em; text-wrap: balance; }
+  h3 { font-size: 0.98rem; font-weight: 700; margin: 0 0 0.35em; }
+  p { margin: 0 0 0.9em; max-width: 72ch; }
+  .lede { font-size: clamp(0.95rem, 2vw, 1.05rem); }
+  .label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+  .dim { opacity: 0.6; }
+  section.block { margin-top: clamp(36px, 5vw, 56px); }
+
+  /* Tabs */
+  nav.tabs { display: flex; flex-wrap: wrap; gap: 4px 22px; margin-top: 28px; border-bottom: 1px solid var(--border); }
+  nav.tabs button {
+    font: inherit; font-weight: 700; font-size: 0.9rem; color: var(--black); background: none; border: 0;
+    padding: 10px 0 12px; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; opacity: 0.55;
+  }
+  nav.tabs button[aria-selected="true"] { opacity: 1; border-bottom-color: var(--blue); }
+  nav.tabs button:hover { opacity: 1; }
+  button:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+  /* Containers */
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: clamp(18px, 3vw, 28px); }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-top: 18px; }
+  .stat { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px 20px; }
+  .stat .label { opacity: 0.55; margin-bottom: 8px; }
+  .stat .v { font-family: var(--num); font-size: clamp(1.5rem, 3.5vw, 2.1rem); font-weight: 700; line-height: 1; margin-bottom: 6px; }
+  .stat .v.key { color: var(--blue); }
+  .stat .s { font-size: 0.75rem; opacity: 0.55; }
+
+  /* Tables */
+  .tscroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 12px; }
+  thead tr { border-bottom: 2px solid var(--black); }
+  th { font-weight: 700; text-align: left; padding: 10px 14px 10px 0; vertical-align: bottom; }
+  td { padding: 10px 14px 10px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* Chips */
+  .chip { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--black); white-space: nowrap; }
+  .chip.decided { background: var(--blue); border-color: var(--blue); color: var(--white); }
+  .chip.parked { border-style: dashed; opacity: 0.7; }
+  .chip.soft { border-color: var(--border); background: var(--white); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+  /* Filter pills */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 16px 0 6px; }
+  .pill { font: inherit; font-size: 0.8rem; font-weight: 700; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--white); color: var(--black); cursor: pointer; }
+  .pill[aria-pressed="true"] { border-color: var(--black); background: var(--black); color: var(--white); }
+  select, input[type="text"], textarea {
+    font: inherit; font-size: 0.88rem; color: var(--black); background: var(--white);
+    border: 1px solid var(--border); border-radius: 10px; padding: 7px 10px; max-width: 100%;
+  }
+  textarea { width: 100%; min-height: 70px; resize: vertical; line-height: 1.5; }
+  .btn { font: inherit; font-size: 0.85rem; font-weight: 700; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--blue); background: var(--blue); color: var(--white); cursor: pointer; }
+  .btn.ghost { background: var(--white); color: var(--blue); }
+  .btn:disabled, select:disabled, textarea:disabled, input:disabled { opacity: 0.45; cursor: not-allowed; }
+  .saved { font-size: 0.78rem; font-weight: 700; }
+
+  /* Loop */
+  .loop { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; margin-top: 16px; }
+  .loop .step { flex: 1 1 140px; min-width: 0; border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px; background: var(--white); }
+  .loop .step .label { opacity: 0.55; }
+  .loop .step b { display: block; font-size: 1rem; margin: 2px 0 4px; }
+  .loop .step span { font-size: 0.82rem; }
+  .loop .arrow { align-self: center; font-weight: 700; color: var(--blue); }
+  .loop-note { margin-top: 12px; font-size: 0.85rem; }
+
+  /* Timeline rows */
+  .rows { display: grid; gap: 0; margin-top: 8px; }
+  .row { display: grid; grid-template-columns: 150px 1fr; gap: 18px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .row:last-child { border-bottom: none; }
+  .row > :first-child { font-weight: 700; }
+  .row > div { min-width: 0; }
+  @media (max-width: 560px) { .row { grid-template-columns: 1fr; gap: 4px; } }
+
+  .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-top: 14px; }
+  .tier { border: 1px solid var(--border); border-radius: 20px; padding: 18px 20px; }
+  .tier .label { opacity: 0.55; }
+  .tier h3 { margin-top: 4px; }
+  .tier p { font-size: 0.86rem; margin-bottom: 0.5em; }
+  .tier.pilot { background: var(--panel); }
+
+  /* Decisions */
+  .area-h { margin: 34px 0 6px; }
+  details.dec { border-bottom: 1px solid var(--border); }
+  details.dec > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; padding: 16px 0; align-items: start; }
+  details.dec > summary::-webkit-details-marker { display: none; }
+  details.dec > summary .q { font-weight: 700; min-width: 0; }
+  details.dec > summary .q::before { content: "+"; display: inline-block; width: 1.1em; color: var(--blue); }
+  details.dec[open] > summary .q::before { content: "\2212"; }
+  .dec-body { padding: 0 0 22px 1.1em; display: grid; gap: 18px; }
+  .dec-body > * { min-width: 0; }
+  .opts { margin: 6px 0 0; padding-left: 1.2em; }
+  .opts li { margin-bottom: 6px; }
+  .rec { color: var(--blue); font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; margin-left: 6px; }
+  .decide { display: grid; gap: 10px; }
+  .decide-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .note { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+  .note:last-child { border-bottom: none; }
+  .note .who { font-size: 0.74rem; font-weight: 700; opacity: 0.6; margin-bottom: 2px; }
+  .decision-text { font-weight: 700; }
+  @media (max-width: 560px) { details.dec > summary { grid-template-columns: 1fr; } }
+
+  /* Mechanics */
+  .mech { display: grid; grid-template-columns: 1fr 130px 130px; gap: 8px 14px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: start; }
+  .mech > div { min-width: 0; }
+  .mech .name { font-weight: 700; }
+  .mech .desc { font-size: 0.86rem; }
+  .mech .src { font-size: 0.72rem; opacity: 0.55; margin-top: 2px; }
+  .mech select { width: 100%; }
+  @media (max-width: 620px) { .mech { grid-template-columns: 1fr 1fr; } .mech > :first-child { grid-column: 1 / -1; } }
+
+  .pipe { display: grid; gap: 14px; margin-top: 16px; }
+  .pipe .card { display: grid; gap: 10px; }
+  .pipe .card > * { min-width: 0; }
+
+  .add { margin-top: 26px; }
+  .add summary { cursor: pointer; font-weight: 700; color: var(--blue); }
+  .add form { display: grid; gap: 10px; margin-top: 12px; }
+  .add .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .add .two { grid-template-columns: 1fr; } }
+
+  .notice { margin-top: 18px; }
+  .empty { padding: 22px 0; }
+
+  .bottom-bar { background: var(--blue); color: var(--white); margin-top: 72px; padding-block: 16px; padding-inline: clamp(16px, 5vw, 64px); display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; justify-content: space-between; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .bottom-bar img { height: 18px; width: auto; display: block; }
+
+  @media (prefers-reduced-motion: no-preference) { nav.tabs button { transition: opacity .15s, border-color .15s; } }
+</style>
+
+<div class="top-bar">Race to Glory &nbsp;·&nbsp; Game plan &nbsp;·&nbsp; Working document</div>
+
+<div class="wrap">
+  <h1>Race to Glory game plan</h1>
+  <p class="lede">The single place for how the game works, what we have decided, what is still open, and what we are saving for later. Decisions, mechanics and pipeline features update live for everyone with access.</p>
+
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" id="tab-overview" data-tab="overview" aria-selected="true">Overview</button>
+    <button role="tab" id="tab-loop" data-tab="loop" aria-selected="false">Loop &amp; progression</button>
+    <button role="tab" id="tab-mechanics" data-tab="mechanics" aria-selected="false">Mechanics</button>
+    <button role="tab" id="tab-decisions" data-tab="decisions" aria-selected="false">Decisions</button>
+    <button role="tab" id="tab-pipeline" data-tab="pipeline" aria-selected="false">Pipeline</button>
+  </nav>
+
+  <p id="dbNotice" class="notice dim" hidden></p>
+
+  <!-- OVERVIEW -->
+  <div id="panel-overview" role="tabpanel">
+    <div class="stats">
+      <div class="stat"><div class="label">Open decisions</div><div class="v key" id="stOpen">–</div><div class="s" id="stOpenSub">loading</div></div>
+      <div class="stat"><div class="label">Decided</div><div class="v" id="stDecided">–</div><div class="s">logged with a date</div></div>
+      <div class="stat"><div class="label">Pilot mechanics</div><div class="v" id="stPilot">–</div><div class="s">planned for 21 Dec</div></div>
+      <div class="stat"><div class="label">Pipeline features</div><div class="v" id="stPipe">–</div><div class="s">saved for later review</div></div>
+    </div>
+
+    <section class="block">
+      <h2>The game in one paragraph</h2>
+      <p>Players buy, build and race their own motorsport team on Roblox. You start as a driver with one tired car and a shed. You race, earn, upgrade the car and grow the garage into a team with staff, a second driver and better facilities. On live weekends you race alongside real drivers, whose cars are streamed into the game as they race in real life.</p>
+      <div class="tscroll">
+        <table>
+          <thead><tr><th>Element</th><th>Current position</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Working title</td><td>Race to Glory</td><td><span class="chip">Working</span></td></tr>
+            <tr><td>Genre</td><td>Racing tycoon on Roblox (PC, console, mobile)</td><td><span class="chip decided">Decided</span></td></tr>
+            <tr><td>Lead fantasy</td><td>Driver first, owner grows. You drive from minute one; team management unlocks over time.</td><td><span class="chip decided">Decided</span></td></tr>
+            <tr><td>Live racing, pilot</td><td>Real cars as ghost cars, with a combined leaderboard of players and real drivers.</td><td><span class="chip decided">Decided</span></td></tr>
+            <tr><td>Live racing, later</td><td>Solid real cars on track that respawn in their correct position if knocked out.</td><td><span class="chip">Pipeline</span></td></tr>
+            <tr><td>Car upgrade depth</td><td>Five slots with trade-offs, five slots with numbers only, or full tuning</td><td><span class="chip">Open</span></td></tr>
+            <tr><td>Visual references</td><td>Need for Speed for look and car culture, Forza Motorsport for performance and tuning, Retail Tycoon for the build loop</td><td><span class="chip soft">Reference</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Experience pillars (proposed)</h2>
+      <p>The GDD leaves these blank. These four come from the GDD, the 7 October call and the reference games. They are listed as a decision so the team can agree or change them.</p>
+      <div class="rows">
+        <div class="row"><div>You are the driver</div><div>Every session includes driving. Upgrades are felt on track, not only read in a menu.</div></div>
+        <div class="row"><div>You can see your progress</div><div>Every upgrade is visible: new parts on the car, new equipment in the garage, a bigger building.</div></div>
+        <div class="row"><div>Racing the real thing</div><div>Live weekends put you on the same track as real drivers. Everything you build leads up to that moment.</div></div>
+        <div class="row"><div>Rivalry that slows you down but never robs you</div><div>Other players can hold you up but can never take away anything you have earned.</div></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Milestones</h2>
+      <div class="tscroll">
+        <table>
+          <thead><tr><th>Milestone</th><th>What it proves</th><th>Target</th></tr></thead>
+          <tbody>
+            <tr><td>Investor demo</td><td>Driving experience, a hint of the tycoon side, look and feel. Fake data is fine: cars lapping a track, then you join a "live" race.</td><td class="num">TBC (Oct)</td></tr>
+            <tr><td>Prototype</td><td>The live streaming tech works: multiple rigs or cars streamed in from the LIVESYNC pipeline, with fail-safes.</td><td class="num">30 Nov</td></tr>
+            <tr><td>Beta</td><td>Internal and community playtest with a group of around 15 trusted testers.</td><td class="num">14 Dec</td></tr>
+            <tr><td>Pilot release</td><td>A full weekend driving experience, significant tycoon features and solid look and feel, live for the Christmas holidays.</td><td class="num">21 Dec</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card" style="margin-top:18px">
+        <h3>Schedule risk</h3>
+        <p style="margin:0">Nicole is away 5–23 November and Adam is away 13–23 November. Will may also be away. That leaves about five working days between everyone's return and the 30 November prototype date. The timeline needs a decision. See "Re-plan the November timeline" under Decisions.</p>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Team</h2>
+      <div class="tscroll">
+        <table>
+          <thead><tr><th>Person</th><th>Focus right now</th></tr></thead>
+          <tbody>
+            <tr><td>Nicole</td><td>Project lead, timelines, the live data pipeline and its format</td></tr>
+            <tr><td>Will</td><td>Content catalogue (every item, from basic to pro), business development and investors</td></tr>
+            <tr><td>Adam</td><td>Roblox development: the demo, multi-rig scaling and client-side rendering</td></tr>
+            <tr><td>Martin (joining)</td><td>The rest of the data pipeline</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- LOOP & PROGRESSION -->
+  <div id="panel-loop" role="tabpanel" hidden>
+    <section class="block" style="margin-top:28px">
+      <h2>Core loop</h2>
+      <p>One sentence: race to earn, spend to get faster, then race again until you are ready for the live weekend.</p>
+      <div class="loop" aria-label="Core loop">
+        <div class="step"><div class="label">Drive</div><b>Race</b><span>Player races, time trials and league rounds</span></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="step"><div class="label">Reward</div><b>Earn</b><span>Cash, reputation and race results</span></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="step"><div class="label">Car</div><b>Upgrade</b><span>Parts you can see and feel on track</span></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="step"><div class="label">Workshop</div><b>Build</b><span>Equipment that unlocks new upgrades and saves time</span></div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="step"><div class="label">Team</div><b>Grow</b><span>Staff and drivers who earn while you are away</span></div>
+      </div>
+      <p class="loop-note">Back to Race. Every weekend the loop builds to a league round or a live event, shown by a countdown on the notice board in your garage.</p>
+    </section>
+
+    <section class="block">
+      <h2>Progression tiers</h2>
+      <p>Adapted from the brainstorm for a driver-first game. Shaded tiers are proposed for the pilot. How many tiers ship at Christmas is still an open decision.</p>
+      <div class="tiers">
+        <div class="tier pilot"><div class="label">Tier 1 · Pilot</div><h3>Backyard racer</h3><p>A shed, one second-hand car and basic tools. You drive every race yourself.</p><p class="dim">Unlocks: the first proper workshop and club races</p></div>
+        <div class="tier pilot"><div class="label">Tier 2 · Pilot</div><h3>Garage owner</h3><p>Multiple bays, ramps and tools. Upgrade parts properly and start placing equipment.</p><p class="dim">Unlocks: weekend leagues and live ghost races</p></div>
+        <div class="tier pilot"><div class="label">Tier 3 · Pilot / Phase 2</div><h3>Club team</h3><p>Hire your first mechanic, sign a sponsor and run a proper league season.</p><p class="dim">Unlocks: a second driver and the racing licence</p></div>
+        <div class="tier"><div class="label">Tier 4 · Phase 2</div><h3>Pro team</h3><p>Two cars and two drivers, a pit crew and R&amp;D. Specialist rooms such as the dyno and paint booth.</p><p class="dim">Unlocks: regional live leagues</p></div>
+        <div class="tier"><div class="label">Tier 5 · Pipeline</div><h3>Contender</h3><p>Run at the front of live races. Driver academy, rival teams and big sponsors.</p><p class="dim">Unlocks: elite events and prestige cars</p></div>
+        <div class="tier"><div class="label">Tier 6 · Pipeline</div><h3>Racing empire</h3><p>Finish this vehicle class's regulation, keep your heritage cars and move to the next class.</p><p class="dim">The GDD's end state: "completed this regulation"</p></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>First session</h2>
+      <p>Based on the call: race first, win no matter what, then drive to your plot. The tutorial should feel like playing the game.</p>
+      <div class="rows">
+        <div class="row"><div class="num">0:00–0:30</div><div>A skippable story beat: you are thrown into a seat at the last minute. You are on the grid within seconds.</div></div>
+        <div class="row"><div class="num">0:30–3:00</div><div>One-lap first race. You win however you drive, then a podium, trophy and first cash.</div></div>
+        <div class="row"><div class="num">3:00–5:00</div><div>Drive to your plot: an empty shed with a ramp outline. Place your first equipment.</div></div>
+        <div class="row"><div class="num">5:00–10:00</div><div>First upgrade (tyres). The new part is visible on the car. A time trial shows the gain against your own ghost.</div></div>
+        <div class="row"><div class="num">10:00–15:00</div><div>First race against other players. The notice board shows the countdown to the weekend league.</div></div>
+        <div class="row"><div class="num">15:00+</div><div>Offline earnings are introduced ("your garage keeps working while you're away"), plus a goal to unlock tier 2.</div></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Retention hooks by timeframe</h2>
+      <div class="tscroll">
+        <table>
+          <thead><tr><th>Timeframe</th><th>Hook</th></tr></thead>
+          <tbody>
+            <tr><td>Seconds</td><td>Lights out, first race, guaranteed win</td></tr>
+            <tr><td>Minutes</td><td>Next upgrade is affordable, beat your own ghost lap</td></tr>
+            <tr><td>Hours</td><td>Offline earnings, repair or upgrade timers finishing</td></tr>
+            <tr><td>Daily</td><td>Daily challenge, description codes, login reward</td></tr>
+            <tr><td>Weekly</td><td>Weekend league round (Saturday afternoon peak)</td></tr>
+            <tr><td>Monthly</td><td>Live race weekend with real drivers, themed month, new season</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>What players earn</h2>
+      <p>Proposed: three visible progressions only, to avoid overwhelming a young audience. The economy model is still an open decision.</p>
+      <div class="tscroll">
+        <table>
+          <thead><tr><th>Progression</th><th>Earned from</th><th>Spent on or unlocks</th></tr></thead>
+          <tbody>
+            <tr><td>Cash</td><td>Races, offline earnings, customer jobs</td><td>Parts, equipment, buildings, staff</td></tr>
+            <tr><td>Reputation</td><td>Results, league finishes, live events</td><td>Workshop tiers, sponsors, better hires</td></tr>
+            <tr><td>Racing licence</td><td>Licence challenges</td><td>Entry to higher leagues and live events</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- MECHANICS -->
+  <div id="panel-mechanics" role="tabpanel" hidden>
+    <section class="block" style="margin-top:28px">
+      <h2>Mechanics catalogue</h2>
+      <p>Every mechanic we are considering, grouped by system. Change a phase or status and it saves for everyone. Anything set to Pipeline also appears in the Pipeline tab.</p>
+      <div class="filters" id="mechFilters" aria-label="Filter by phase"></div>
+      <div class="filters">
+        <label class="label" for="mechSystem">System</label>
+        <select id="mechSystem"><option value="">All systems</option></select>
+      </div>
+      <div id="mechList"><p class="empty dim">Loading mechanics…</p></div>
+      <details class="add" id="addMech">
+        <summary>Add a mechanic</summary>
+        <form id="mechForm">
+          <input type="text" id="mfName" placeholder="Name, e.g. Wet-weather tyres" required>
+          <textarea id="mfDesc" placeholder="What it does and why it matters"></textarea>
+          <div class="two">
+            <select id="mfSystem" aria-label="System"></select>
+            <select id="mfPhase" aria-label="Phase"></select>
+          </div>
+          <div class="decide-row"><button class="btn" type="submit">Add mechanic</button><span class="saved" id="mfSaved" aria-live="polite"></span></div>
+        </form>
+      </details>
+    </section>
+  </div>
+
+  <!-- DECISIONS -->
+  <div id="panel-decisions" role="tabpanel" hidden>
+    <section class="block" style="margin-top:28px">
+      <h2>Decision log</h2>
+      <p>Every question that affects how the pieces fit together. Each has options, a recommendation and a discussion thread. Record the decision once agreed, or park it to come back to.</p>
+      <div class="filters" id="decStatus" aria-label="Filter by status"></div>
+      <div class="filters" id="decNeeded" aria-label="Filter by when it is needed"></div>
+      <div id="decList"><p class="empty dim">Loading decisions…</p></div>
+    </section>
+  </div>
+
+  <!-- PIPELINE -->
+  <div id="panel-pipeline" role="tabpanel" hidden>
+    <section class="block" style="margin-top:28px">
+      <h2>Pipeline features</h2>
+      <p>Ideas we like but are not building yet. Review them after the pilot. Notes save when you click away from the box, and a feature can be moved into a phase at any time.</p>
+      <div id="pipeList" class="pipe"><p class="empty dim">Loading pipeline…</p></div>
+      <details class="add" id="addPipe">
+        <summary>Add a pipeline feature</summary>
+        <form id="pipeForm">
+          <input type="text" id="pfName" placeholder="Name, e.g. Night races" required>
+          <textarea id="pfDesc" placeholder="What it is and why it's for later"></textarea>
+          <select id="pfSystem" aria-label="System"></select>
+          <div class="decide-row"><button class="btn" type="submit">Add to pipeline</button><span class="saved" id="pfSaved" aria-live="polite"></span></div>
+        </form>
+      </details>
+    </section>
+  </div>
+</div>
+
+<div class="bottom-bar">
+  <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjM4IiB2aWV3Qm94PSIwIDAgMjU2IDM4IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8Y2lyY2xlIGN4PSI1IiBjeT0iNSIgcj0iNSIgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgLTEgMSAxMSkiIGZpbGw9IiNFNTI2MjYiLz4KPHBhdGggZD0iTTIzNy4wMSAyMC4zNTFWMjYuNzY4OEMyMzcuMDEgMjcuODY1MiAyMzcuMzczIDI4LjcwNzUgMjM4LjA5OSAyOS4yOTU4QzIzOC44NTEgMjkuODg0MSAyMzkuODE5IDMwLjE3ODMgMjQxLjAwMiAzMC4xNzgzQzI0Mi4yMTEgMzAuMTc4MyAyNDMuMDg1IDI5Ljk5MTEgMjQzLjYyMiAyOS42MTY3QzI0NC4xNiAyOS4yNDIzIDI0NC42MDMgMjguNjk0MSAyNDQuOTUzIDI3Ljk3MjFDMjQ1LjMyOSAyNy4yNTAxIDI0NS44MTMgMjYuODg5MSAyNDYuNDA0IDI2Ljg4OTFIMjU1LjExM0MyNTUuMzU1IDI2Ljg4OTEgMjU1LjU1NyAyNi45ODI3IDI1NS43MTggMjcuMTY5OUMyNTUuOTA2IDI3LjMzMDQgMjU2IDI3LjUzMDkgMjU2IDI3Ljc3MTZDMjU2IDMwLjI1ODUgMjU0LjgxNyAzMi41MzE1IDI1Mi40NTIgMzQuNTkwNUMyNTEuMjY5IDM1LjYwNjcgMjQ5LjY5NyAzNi40MzU2IDI0Ny43MzUgMzcuMDc3NEMyNDUuNzczIDM3LjY5MjUgMjQzLjQ2MSAzOCAyNDAuOCAzOEMyMzguMTM5IDM4IDIzNS43MDYgMzcuNTk4OSAyMzMuNTAyIDM2Ljc5NjZDMjMxLjMyNSAzNS45Njc3IDIyOS41NTEgMzQuNjMwNiAyMjguMTggMzIuNzg1NUMyMjYuODA5IDMwLjkxMzYgMjI2LjEyNCAyOC42MjczIDIyNi4xMjQgMjUuOTI2NVYyMS4xOTMzQzIyNi4xMjQgMTguNDkyNSAyMjYuODA5IDE2LjIwNjEgMjI4LjE4IDE0LjMzNDNDMjMwLjc2MSAxMC44NTggMjM1LjA3NSA5LjExOTgxIDI0MS4xMjMgOS4xMTk4MUMyNDMuNTY4IDkuMTE5ODEgMjQ1Ljc3MyA5LjQ0MDcgMjQ3LjczNSAxMC4wODI1QzI0OS42OTcgMTAuNjk3NSAyNTEuMjY5IDExLjUxMzEgMjUyLjQ1MiAxMi41MjkzQzI1NC44MTcgMTQuNTg4MyAyNTYgMTYuODYxMyAyNTYgMTkuMzQ4MkMyNTYgMTkuNTg4OSAyNTUuOTA2IDE5LjgwMjggMjU1LjcxOCAxOS45OUMyNTUuNTU3IDIwLjE1MDQgMjU1LjM1NSAyMC4yMzA3IDI1NS4xMTMgMjAuMjMwN0gyNDYuNDA0QzI0NS44MTMgMjAuMjMwNyAyNDUuMzI5IDE5Ljg2OTcgMjQ0Ljk1MyAxOS4xNDc2QzI0NC42MDMgMTguNDI1NiAyNDQuMTYgMTcuODc3NSAyNDMuNjIyIDE3LjUwMzFDMjQzLjA4NSAxNy4xMjg3IDI0Mi4yMTEgMTYuOTQxNSAyNDEuMDAyIDE2Ljk0MTVDMjM5LjgxOSAxNi45NDE1IDIzOC44NTEgMTcuMjM1NyAyMzguMDk5IDE3LjgyNEMyMzcuMzczIDE4LjQxMjMgMjM3LjAxIDE5LjI1NDYgMjM3LjAxIDIwLjM1MVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0yMTQuNzg4IDkuMTE5ODFIMjIyLjA3OEMyMjIuMzY2IDkuMTE5ODEgMjIyLjYxNCA5LjIyNjA0IDIyMi44MjMgOS40Mzg0OUMyMjMuMDMyIDkuNjUwOTQgMjIzLjEzNiA5LjkwMzIzIDIyMy4xMzYgMTAuMTk1M1YzNS45Mjg2QzIyMy4xMzYgMzYuMjIwNyAyMjMuMDMyIDM2LjQ3MyAyMjIuODIzIDM2LjY4NTRDMjIyLjYxNCAzNi44OTc5IDIyMi4zNjYgMzcuMDA0MSAyMjIuMDc4IDM3LjAwNDFIMjE1Ljc2OEMyMTUuMTQgMzcuMDA0MSAyMTQuNjE4IDM2LjcyNTMgMjE0LjIgMzYuMTY3NkwyMDUuNjU1IDI1LjA5MzVWMzUuOTI4NkMyMDUuNjU1IDM2LjIyMDcgMjA1LjU1MSAzNi40NzMgMjA1LjM0MiAzNi42ODU0QzIwNS4xMzIgMzYuODk3OSAyMDQuODg0IDM3LjAwNDEgMjA0LjU5NyAzNy4wMDQxSDE5Ny4zMDZDMTk3LjAxOSAzNy4wMDQxIDE5Ni43NzEgMzYuODk3OSAxOTYuNTYyIDM2LjY4NTRDMTk2LjM1MyAzNi40NzMgMTk2LjI0OCAzNi4yMjA3IDE5Ni4yNDggMzUuOTI4NlYxMC4xOTUzQzE5Ni4yNDggOS45MDMyMyAxOTYuMzUzIDkuNjUwOTQgMTk2LjU2MiA5LjQzODQ5QzE5Ni43NzEgOS4yMjYwNCAxOTcuMDE5IDkuMTE5ODEgMTk3LjMwNiA5LjExOTgxSDIwMy42NTZDMjA0LjI4MyA5LjExOTgxIDIwNC43OTMgOS4zODUzOCAyMDUuMTg1IDkuOTE2NTFMMjEzLjcyOSAyMS45MDY4VjEwLjE5NTNDMjEzLjcyOSA5LjkwMzIzIDIxMy44MzQgOS42NTA5NCAyMTQuMDQzIDkuNDM4NDlDMjE0LjI1MiA5LjIyNjA0IDIxNC41IDkuMTE5ODEgMjE0Ljc4OCA5LjExOTgxWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTE4NS4wNjYgOS4xMTk4MUgxOTMuMzgxQzE5My42MiA5LjExOTgxIDE5My44MTkgOS4yMTI3NiAxOTMuOTc4IDkuMzk4NjZDMTk0LjE2MyA5LjU1Nzk5IDE5NC4yNTYgOS43MzA2MSAxOTQuMjU2IDkuOTE2NTFDMTk0LjI1NiAxMC4xMDI0IDE5NC4yMTYgMTAuMjc1IDE5NC4xMzcgMTAuNDM0NEwxODQuMTExIDI3LjA0NTRWMzUuOTI4NkMxODQuMTExIDM2LjIyMDcgMTg0LjAwNSAzNi40NzMgMTgzLjc5MyAzNi42ODU0QzE4My41ODEgMzYuODk3OSAxODMuMzI5IDM3LjAwNDEgMTgzLjAzNyAzNy4wMDQxSDE3NC41NjNDMTc0LjI3MiAzNy4wMDQxIDE3NC4wMiAzNi44OTc5IDE3My44MDggMzYuNjg1NEMxNzMuNTk1IDM2LjQ3MyAxNzMuNDg5IDM2LjIyMDcgMTczLjQ4OSAzNS45Mjg2VjI3LjA0NTRMMTYzLjUwNCAxMC40MzQ0QzE2My40MjQgMTAuMjc1IDE2My4zODQgMTAuMTAyNCAxNjMuMzg0IDkuOTE2NTFDMTYzLjM4NCA5LjczMDYxIDE2My40NjQgOS41NTc5OSAxNjMuNjIzIDkuMzk4NjZDMTYzLjgwOSA5LjIxMjc2IDE2NC4wMjEgOS4xMTk4MSAxNjQuMjYgOS4xMTk4MUgxNzIuNjU0QzE3My4zOTYgOS4xMTk4MSAxNzMuOTQgOS40MjUyMSAxNzQuMjg1IDEwLjAzNkwxNzguNzggMTcuOTIzM0wxODMuMzk1IDEwLjExNTdDMTgzLjc5MyA5LjQ1MTc3IDE4NC4zNSA5LjExOTgxIDE4NS4wNjYgOS4xMTk4MVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xNTEuMjQ3IDE5LjcwOTJDMTU1LjYyNyAyMC4yMTczIDE1OC43MzggMjEuMTY2NiAxNjAuNTggMjIuNTU3MUMxNjIuNDQ5IDIzLjkyMDkgMTYzLjM4NCAyNS45Nzk5IDE2My4zODQgMjguNzM0M0MxNjMuMzg0IDMxLjQ4ODYgMTYyLjAzNiAzMy43MjE0IDE1OS4zMzggMzUuNDMyOUMxNTYuNjQxIDM3LjE0NDMgMTUzLjA2MyAzOCAxNDguNjA0IDM4QzE0NC4xNDQgMzggMTQwLjY3MiAzNy4xODQ0IDEzOC4xODkgMzUuNTUzMkMxMzUuNzMyIDMzLjg5NTIgMTM0LjUwNCAzMS44NjI5IDEzNC41MDQgMjkuNDU2M0MxMzQuNTA0IDI4Ljg2OCAxMzQuODExIDI4LjU3MzggMTM1LjQyNSAyOC41NzM4SDE0My42MzdDMTQ0LjE5NyAyOC41NzM4IDE0NC42NTEgMjguNzQ3NiAxNDQuOTk5IDI5LjA5NTNDMTQ1Ljc0NiAyOS44MTczIDE0Ny4wNDEgMzAuMTc4MyAxNDguODg0IDMwLjE3ODNDMTUxLjQyMSAzMC4xNzgzIDE1Mi42ODkgMjkuNzkwNSAxNTIuNjg5IDI5LjAxNUMxNTIuNjg5IDI4LjUzMzcgMTUyLjI4OSAyOC4xNTkzIDE1MS40ODggMjcuODkxOUMxNTAuNjg2IDI3LjU5NzggMTQ5LjA5OCAyNy4zMTcgMTQ2LjcyMSAyNy4wNDk2QzEzOS4xNjQgMjYuMTQwNCAxMzUuMzg1IDIzLjIzOSAxMzUuMzg1IDE4LjM0NTRDMTM1LjM4NSAxNS41OTExIDEzNi42IDEzLjM3MTYgMTM5LjAzIDExLjY4NjlDMTQxLjQ2IDkuOTc1NTIgMTQ0LjcwNSA5LjExOTgxIDE0OC43NjQgOS4xMTk4MUMxNTIuODQ5IDkuMTE5ODEgMTU2LjE0NyAxMC4wMTU2IDE1OC42NTcgMTEuODA3M0MxNjEuMTY4IDEzLjU3MjIgMTYyLjQyMyAxNS40NDQgMTYyLjQyMyAxNy40MjI5QzE2Mi40MjMgMTcuNjkwMyAxNjIuMzI5IDE3LjkwNDIgMTYyLjE0MiAxOC4wNjQ2QzE2MS45ODIgMTguMjI1MSAxNjEuNzU1IDE4LjMwNTMgMTYxLjQ2MSAxOC4zMDUzSDE1Mi44NDlDMTUyLjM2OSAxOC4zMDUzIDE1MS45NTUgMTguMTQ0OSAxNTEuNjA4IDE3LjgyNEMxNTAuOTY3IDE3LjIzNTcgMTUwLjAwNSAxNi45NDE1IDE0OC43MjQgMTYuOTQxNUMxNDYuOTM1IDE2Ljk0MTUgMTQ2LjA0IDE3LjMxNTkgMTQ2LjA0IDE4LjA2NDZDMTQ2LjA0IDE4LjQ2NTggMTQ2LjM4NyAxOC43ODY2IDE0Ny4wODEgMTkuMDI3M0MxNDcuNzc2IDE5LjI0MTIgMTQ5LjE2NCAxOS40Njg1IDE1MS4yNDcgMTkuNzA5MloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMTUuODE1IDI5LjIzNjNIMTMxLjQ1NEMxMzEuNzQyIDI5LjIzNjMgMTMxLjk5IDI5LjM0MjYgMTMyLjE5OSAyOS41NTVDMTMyLjQwOCAyOS43Njc1IDEzMi41MTIgMzAuMDE5OCAxMzIuNTEyIDMwLjMxMTlWMzUuOTI4NkMxMzIuNTEyIDM2LjIyMDcgMTMyLjQwOCAzNi40NzMgMTMyLjE5OSAzNi42ODU0QzEzMS45OSAzNi44OTc5IDEzMS43NDIgMzcuMDA0MSAxMzEuNDU0IDM3LjAwNDFIMTA2LjY4MkMxMDYuMzk1IDM3LjAwNDEgMTA2LjE0NyAzNi44OTc5IDEwNS45MzggMzYuNjg1NEMxMDUuNzI5IDM2LjQ3MyAxMDUuNjI0IDM2LjIyMDcgMTA1LjYyNCAzNS45Mjg2VjEwLjE5NTNDMTA1LjYyNCA5LjkwMzIzIDEwNS43MjkgOS42NTA5NCAxMDUuOTM4IDkuNDM4NDlDMTA2LjE0NyA5LjIyNjA0IDEwNi4zOTUgOS4xMTk4MSAxMDYuNjgyIDkuMTE5ODFIMTMxLjA2MkMxMzEuMzUgOS4xMTk4MSAxMzEuNTk4IDkuMjI2MDQgMTMxLjgwNyA5LjQzODQ5QzEzMi4wMTYgOS42NTA5NCAxMzIuMTIgOS45MDMyMyAxMzIuMTIgMTAuMTk1M1YxNS44MTJDMTMyLjEyIDE2LjEwNDIgMTMyLjAxNiAxNi4zNTY1IDEzMS44MDcgMTYuNTY4OUMxMzEuNTk4IDE2Ljc4MTQgMTMxLjM1IDE2Ljg4NzYgMTMxLjA2MiAxNi44ODc2SDExNS44MTVWMTkuMzk3MkgxMjguOTA2QzEyOS4xOTQgMTkuMzk3MiAxMjkuNDQyIDE5LjUwMzQgMTI5LjY1MSAxOS43MTU4QzEyOS44NiAxOS45MjgzIDEyOS45NjUgMjAuMTgwNiAxMjkuOTY1IDIwLjQ3MjdWMjUuNjUxMkMxMjkuOTY1IDI1Ljk0MzMgMTI5Ljg2IDI2LjE5NTYgMTI5LjY1MSAyNi40MDgxQzEyOS40NDIgMjYuNjIwNSAxMjkuMTk0IDI2LjcyNjggMTI4LjkwNiAyNi43MjY4SDExNS44MTVWMjkuMjM2M1oiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik05NC40ODA2IDkuMTE5ODFIMTAyLjc2OEMxMDMuMDA0IDkuMTE5ODEgMTAzLjIgOS4yMTI3NiAxMDMuMzU3IDkuMzk4NjZDMTAzLjU0MSA5LjU1Nzk5IDEwMy42MzIgOS43MTczMyAxMDMuNjMyIDkuODc2NjdDMTAzLjYzMiAxMC4wMzYgMTAzLjYxOSAxMC4xNjg4IDEwMy41OTMgMTAuMjc1TDk0LjU1OTEgMzUuNjg5NkM5NC4yNzExIDM2LjU2NTkgOTMuNjgxOSAzNy4wMDQxIDkyLjc5MTYgMzcuMDA0MUg4My42NEM4Mi43NzU5IDM3LjAwNDEgODIuMTk5OSAzNi42MDU4IDgxLjkxMTggMzUuODA5MUw3Mi43OTk1IDEwLjI3NUM3Mi43NzMzIDEwLjE2ODggNzIuNzYwMyAxMC4wMzYgNzIuNzYwMyA5Ljg3NjY3QzcyLjc2MDMgOS43MTczMyA3Mi44Mzg4IDkuNTU3OTkgNzIuOTk1OSA5LjM5ODY2QzczLjE3OTIgOS4yMTI3NiA3My4zODg3IDkuMTE5ODEgNzMuNjI0NCA5LjExOTgxSDgxLjkxMThDODIuMzgzMiA5LjExOTgxIDgyLjc2MjkgOS4yNjU4NyA4My4wNTA5IDkuNTU4QzgzLjM2NTEgOS44MjM1NiA4My41NzQ2IDEwLjExNTcgODMuNjc5MyAxMC40MzQ0TDg4LjE5NjIgMjUuNjkxMUw5Mi43MTMxIDEwLjQzNDRDOTIuOTQ4NyA5LjU1Nzk5IDkzLjUzNzkgOS4xMTk4MSA5NC40ODA2IDkuMTE5ODFaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNNjkuNjc0MyAxNy4yODU5SDYyLjMzODRWMjguODM4SDY5LjY3NDNDNjkuOTcxNSAyOC44MzggNzAuMjI4MiAyOC45NDQyIDcwLjQ0NDMgMjkuMTU2N0M3MC42NjA1IDI5LjM2OTEgNzAuNzY4NiAyOS42MjE0IDcwLjc2ODYgMjkuOTEzNVYzNS45Mjg2QzcwLjc2ODYgMzYuMjIwNyA3MC42NjA1IDM2LjQ3MyA3MC40NDQzIDM2LjY4NTRDNzAuMjI4MiAzNi44OTc5IDY5Ljk3MTUgMzcuMDA0MSA2OS42NzQzIDM3LjAwNDFINDMuOTc4NkM0My42ODE0IDM3LjAwNDEgNDMuNDI0NyAzNi44OTc5IDQzLjIwODUgMzYuNjg1NEM0Mi45OTI0IDM2LjQ3MyA0Mi44ODQzIDM2LjIyMDcgNDIuODg0MyAzNS45Mjg2VjI5LjkxMzVDNDIuODg0MyAyOS42MjE0IDQyLjk5MjQgMjkuMzY5MSA0My4yMDg1IDI5LjE1NjdDNDMuNDI0NyAyOC45NDQyIDQzLjY4MTQgMjguODM4IDQzLjk3ODYgMjguODM4SDUxLjM5NTVWMTcuMjg1OUg0My45Nzg2QzQzLjY4MTQgMTcuMjg1OSA0My40MjQ3IDE3LjE3OTcgNDMuMjA4NSAxNi45NjczQzQyLjk5MjQgMTYuNzU0OCA0Mi44ODQzIDE2LjUwMjUgNDIuODg0MyAxNi4yMTA0VjEwLjE5NTNDNDIuODg0MyA5LjkwMzIzIDQyLjk5MjQgOS42NTA5NCA0My4yMDg1IDkuNDM4NDlDNDMuNDI0NyA5LjIyNjA0IDQzLjY4MTQgOS4xMTk4MSA0My45Nzg2IDkuMTE5ODFINjkuNjc0M0M2OS45NzE1IDkuMTE5ODEgNzAuMjI4MiA5LjIyNjA0IDcwLjQ0NDMgOS40Mzg0OUM3MC42NjA1IDkuNjUwOTQgNzAuNzY4NiA5LjkwMzIzIDcwLjc2ODYgMTAuMTk1M1YxNi4yMTA0QzcwLjc2ODYgMTYuNTAyNSA3MC42NjA1IDE2Ljc1NDggNzAuNDQ0MyAxNi45NjczQzcwLjIyODIgMTcuMTc5NyA2OS45NzE1IDE3LjI4NTkgNjkuNjc0MyAxNy4yODU5WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTI1Ljk1NzcgMjguODM4SDM5Ljc5NjhDNDAuMDk0NCAyOC44MzggNDAuMzUxNCAyOC45NDQyIDQwLjU2NzkgMjkuMTU2N0M0MC43ODQzIDI5LjM2OTEgNDAuODkyNiAyOS42MjE0IDQwLjg5MjYgMjkuOTEzNVYzNS45Mjg2QzQwLjg5MjYgMzYuMjIwNyA0MC43ODQzIDM2LjQ3MyA0MC41Njc5IDM2LjY4NTRDNDAuMzUxNCAzNi44OTc5IDQwLjA5NDQgMzcuMDA0MSAzOS43OTY4IDM3LjAwNDFIMTYuMDk1OEMxNS43OTgyIDM3LjAwNDEgMTUuNTQxMSAzNi44OTc5IDE1LjMyNDcgMzYuNjg1NEMxNS4xMDgyIDM2LjQ3MyAxNSAzNi4yMjA3IDE1IDM1LjkyODZWMTAuMTk1M0MxNSA5LjkwMzIzIDE1LjEwODIgOS42NTA5NCAxNS4zMjQ3IDkuNDM4NDlDMTUuNTQxMSA5LjIyNjA0IDE1Ljc5ODIgOS4xMTk4MSAxNi4wOTU4IDkuMTE5ODFIMjQuODYxOUMyNS4xNTk1IDkuMTE5ODEgMjUuNDE2NSA5LjIyNjA0IDI1LjYzMyA5LjQzODQ5QzI1Ljg0OTQgOS42NTA5NCAyNS45NTc3IDkuOTAzMjMgMjUuOTU3NyAxMC4xOTUzVjI4LjgzOFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" alt="LIVESYNC">
+  <span>Race to Glory · Game plan</span>
+</div>
+
+<script id="snapshot" type="application/json">{"takenAt": "2026-10-12T12:00:00Z", "liveUrl": "https://claude.ai/artifact/LZBTgHSmp6rRc4Wd9RTCS4", "decisions": [{"id": "analytics", "area": "Production", "context": "Adam tracks every tutorial step with AnalyticsService to see where players drop off.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "", "label": "Tutorial funnel + economy + race events"}], "order": 320, "owner": "Adam", "recommendation": "", "recommended": "Tutorial funnel + economy + race events", "status": "Open", "title": "Which analytics events do we track?"}, {"id": "audience", "area": "Audience & platform", "context": "The GDD audience section is blank. It affects difficulty, UI copy, monetisation limits and car depth.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "Motorsport fans and adults are secondary.", "label": "Roblox players aged 9–15"}, {"detail": "", "label": "Teens and young adults 13–20"}], "order": 280, "owner": "Team", "recommendation": "", "recommended": "Roblox players aged 9–15", "status": "Open", "title": "Who is the primary audience?"}, {"id": "beta-label", "area": "Production", "context": "Adam's experience: players don't care about the label, and a long quiet beta can build hype for a 'full release'.", "decidedOn": "2026-10-07T15:00:00Z", "decision": "A small note in the description or in-game, not in the title. The description can also carry reward codes. Adam's advice on the 7 Oct call.", "neededBy": "Pilot", "options": [{"detail": "Keep it in beta quietly for longer.", "label": "Small note in the description"}, {"detail": "", "label": "Beta in the title"}], "order": 70, "owner": "Adam", "recommendation": "", "recommended": "Small note in the description", "status": "Decided", "title": "Do we label the game as beta?"}, {"id": "between-events", "area": "Live events", "context": "Live data won't be available most of the time.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "Replays of past real races as ghost challenges.", "label": "Historic challenges"}, {"detail": "", "label": "Player races and leagues only"}], "order": 220, "owner": "Nicole", "recommendation": "This reuses the live pipeline and turns every real race into lasting content.", "recommended": "Historic challenges", "status": "Open", "title": "What do players race when no live event is on?"}, {"id": "build-model", "area": "Workshop & team", "context": "The GDD sells 'freeform' building as a differentiator, like Retail Tycoon.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "Place equipment anywhere on a grid. Creative but readable.", "label": "Grid-snapped freeform in a plot"}, {"detail": "The classic tycoon. Fast to build, less creative.", "label": "Fixed slots / buttons"}, {"detail": "Most creative, hardest to balance and moderate.", "label": "Full freeform"}], "order": 150, "owner": "Adam", "recommendation": "", "recommended": "Grid-snapped freeform in a plot", "status": "Open", "title": "How free is workshop building?"}, {"id": "car-licensing", "area": "Art & IP", "context": "Real cars are a strong draw but need licences. Nicole flagged respecting existing driving IP.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "", "label": "Fictional lookalikes"}, {"detail": "", "label": "Licensed manufacturers via partners"}, {"detail": "", "label": "Mix: licensed where a partner brings it"}], "order": 310, "owner": "Will", "recommendation": "", "recommended": "", "status": "Open", "title": "Real car brands or fictional lookalikes?"}, {"id": "controls", "area": "Audience & platform", "context": "The GDD targets PC, console, iOS and Android. Most Roblox play is mobile.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "", "label": "On-screen pedals + steer buttons"}, {"detail": "", "label": "Tilt steering option"}, {"detail": "", "label": "Assist: auto-accelerate for beginners"}], "order": 290, "owner": "Adam", "recommendation": "Probably all three as options, with assists on by default for new players.", "recommended": "", "status": "Open", "title": "How do players drive on mobile and gamepad?"}, {"id": "coop", "area": "Social & rivalry", "context": "The GDD ticks 'online co-op'.", "decision": "", "neededBy": "Phase 2", "options": [{"detail": "", "label": "Yes: shared team or club"}, {"detail": "", "label": "Visiting and racing only"}], "order": 360, "owner": "Team", "recommendation": "", "recommended": "", "status": "Open", "title": "Can friends share one team?"}, {"id": "currencies", "area": "Economy", "context": "Too many bars overwhelm a young audience.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "Three visible. Engineering and driver XP sit inside their own systems.", "label": "Cash, reputation, racing licence"}, {"detail": "", "label": "Add a premium currency"}], "order": 240, "owner": "Will", "recommendation": "", "recommended": "Cash, reputation, racing licence", "status": "Open", "title": "Which currencies and progressions are visible?"}, {"id": "damage", "area": "Car & racing", "context": "Damage creates repair jobs and money sinks, but must not stop kids from racing.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "Never blocks the next race.", "label": "Light damage, repair is time or cash"}, {"detail": "", "label": "Cosmetic only"}, {"detail": "", "label": "No damage"}], "order": 180, "owner": "Will", "recommendation": "", "recommended": "Light damage, repair is time or cash", "status": "Open", "title": "Does racing damage the car?"}, {"id": "data-shape", "area": "Live events", "context": "Frame-by-frame suits humanoid rigs. Cars may be better as racing-line or curvature data. Packages of several objects were agreed as the direction on 7 Oct.", "decision": "", "neededBy": "Prototype", "options": [{"detail": "", "label": "Frame-by-frame positions"}, {"detail": "Smaller payload, interpolated on the Roblox client.", "label": "Racing line + speed (curvature)"}, {"detail": "Extrapolate between packets.", "label": "Position + velocity samples"}], "order": 100, "owner": "Nicole", "recommendation": "Adam and Martin to propose a format after testing. Include fail-safes for dropped packets (extrapolate all cars together).", "recommended": "", "status": "Open", "title": "What shape does live car data arrive in?"}, {"id": "demo-scope", "area": "Production", "context": "Investors need momentum. The demo must show driving, a hint of the tycoon side, and the moment you join a 'live' race (fake data is fine).", "decision": "", "neededBy": "Demo", "options": [{"detail": "Smallest slice that shows all three ideas.", "label": "Driving + one upgrade + fake live race"}, {"detail": "Faster, but no tycoon hint.", "label": "Driving + live race only"}, {"detail": "Stronger, but risks the date.", "label": "Fuller slice with garage building"}], "order": 80, "owner": "Nicole", "recommendation": "Lock a date this month. Show one car, one track, one visible upgrade and a scripted 'live' moment with 10–20 ghost cars.", "recommended": "Driving + one upgrade + fake live race", "status": "Open", "title": "What exactly is in the investor demo, and when is it due?"}, {"id": "driving-feel", "area": "Car & racing", "context": "The audience is casual and above. Forza is the performance reference, but the controls must work on a phone.", "decision": "", "neededBy": "Demo", "options": [{"detail": "Forgiving, drift-friendly.", "label": "Arcade"}, {"detail": "Grip and weight matter, upgrades are clearly felt, still forgiving.", "label": "Arcade-sim"}, {"detail": "Realistic braking and tyre limits.", "label": "Sim-lite"}], "order": 120, "owner": "Adam", "recommendation": "Upgrades only feel meaningful if the handling model lets you notice them.", "recommended": "Arcade-sim", "status": "Open", "title": "How should driving feel?"}, {"id": "first-series", "area": "Live events", "context": "This decides the car models, the track, what Will catalogues, and what 'completed this regulation' (the GDD's end state) means.", "decision": "", "neededBy": "Demo", "options": [{"detail": "Close racing, recognisable road-car shapes, a UK audience.", "label": "Touring cars (e.g. BTCC-style)"}, {"detail": "Aspirational cars, good for Need for Speed-style visuals.", "label": "GT / sportscar"}, {"detail": "One car model is the simplest to build and balance.", "label": "Single-make cup"}, {"detail": "Close to the audience's age, simple physics.", "label": "Karting / junior"}], "order": 90, "owner": "Will", "recommendation": "Depends on which data partner we can get. Pick the series we can actually stream first.", "recommended": "", "status": "Open", "title": "Which real series, car class and track do we launch with?"}, {"id": "game-name", "area": "Production", "context": "It's a working title. No significant Roblox game uses the name.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "", "label": "Keep Race to Glory"}, {"detail": "", "label": "Explore alternatives"}], "order": 330, "owner": "Team", "recommendation": "", "recommended": "", "status": "Open", "title": "Is the final name Race to Glory?"}, {"id": "lead-fantasy", "area": "Core game", "context": "The GDD says 'team manager and racing driver'. Every other system needs one of these to come first.", "decidedOn": "2026-10-12T12:00:00Z", "decision": "Driver first, owner grows. It fits the demo, live racing and the 'one player, one car first' agreement.", "neededBy": "Demo", "options": [{"detail": "You drive from minute one. Hiring, staff and a second car unlock later.", "label": "Driver first, owner grows"}, {"detail": "AI drivers race for you and driving is optional.", "label": "Team owner first"}, {"detail": "The garage and the car are the stars.", "label": "Car builder first"}], "order": 10, "owner": "Nicole", "recommendation": "", "recommended": "Driver first, owner grows", "status": "Decided", "title": "Which player fantasy leads the game?"}, {"id": "live-fairness", "area": "Live events", "context": "The GDD says winning a live race takes time and upgrades. New players still need to feel they can compete.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "Upgrades matter. Leagues are split by performance index.", "label": "Open performance"}, {"detail": "Everyone is capped at the same rating, so skill decides.", "label": "Capped class per event"}, {"detail": "", "label": "Both: separate events"}], "order": 210, "owner": "Team", "recommendation": "", "recommended": "", "status": "Open", "title": "Do upgrades matter in live races, or is it a level field?"}, {"id": "live-model", "area": "Live events", "context": "This is the game's unique feature and the biggest technical risk.", "decidedOn": "2026-10-12T12:00:00Z", "decision": "Ghost cars plus a combined leaderboard for the pilot. Solid cars that respawn in their correct position if knocked out are saved in the pipeline.", "neededBy": "Prototype", "options": [{"detail": "Real cars replayed from streamed data with no collisions. Players are ranked against real times.", "label": "Ghost cars + leaderboard"}, {"detail": "Real cars are physical objects. They respawn in their correct position if knocked out.", "label": "Solid cars on track"}, {"detail": "Spectate and make strategy calls only.", "label": "Watch and predict"}], "order": 20, "owner": "Nicole", "recommendation": "", "recommended": "Ghost cars + leaderboard", "status": "Decided", "title": "How do players race real drivers during a live event?"}, {"id": "live-rewards", "area": "Live events", "context": "Live weekends must feel worth planning your Saturday around.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "Rewards for beating a real driver's lap or finishing position.", "label": "Beat-the-pro rewards"}, {"detail": "", "label": "Participation + leaderboard tiers"}, {"detail": "", "label": "Exclusive cosmetics (event liveries)"}], "order": 200, "owner": "Will", "recommendation": "Probably a mix: everyone gets something, and beating a pro earns a badge or livery.", "recommended": "", "status": "Open", "title": "What do players earn from a live weekend?"}, {"id": "matchmaking", "area": "Car & racing", "context": "The GDD wants tiered leagues and local leaderboards so new players can compete straight away.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "", "label": "Tiered leagues by performance index"}, {"detail": "", "label": "Open lobbies"}, {"detail": "", "label": "Both"}], "order": 230, "owner": "Adam", "recommendation": "", "recommended": "Tiered leagues by performance index", "status": "Open", "title": "How are player races matched?"}, {"id": "monetisation", "area": "Economy", "context": "The GDD's monetisation section is blank. The audience skews young, so limits matter for platform rules and parents.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "Paint, liveries, exhaust sounds, garage themes.", "label": "Game passes + cosmetics"}, {"detail": "Faster builds or repairs as developer products.", "label": "Plus time-savers"}, {"detail": "", "label": "Plus premium currency"}], "order": 250, "owner": "Will", "recommendation": "Write down the limits first: no paid stat advantage in live races, no loot boxes.", "recommended": "Game passes + cosmetics", "status": "Open", "title": "Monetisation model and ethical limits"}, {"id": "nov-timeline", "area": "Production", "context": "Nicole is away 5–23 Nov and Adam 13–23 Nov, and Will may be away too. That leaves about five working days before the 30 Nov prototype.", "decision": "", "neededBy": "Prototype", "options": [{"detail": "The prototype proves streaming only.", "label": "Keep dates, cut scope"}, {"detail": "Squeezes beta to one week.", "label": "Move the prototype to 7 Dec"}, {"detail": "Hard, but frees up December.", "label": "Front-load: prototype by 4 Nov"}], "order": 110, "owner": "Nicole", "recommendation": "Decide before 24 Oct so Adam has a clear target before he leaves.", "recommended": "", "status": "Open", "title": "Re-plan November around holidays"}, {"id": "offline-ai", "area": "Workshop & team", "context": "This ties hired drivers to offline earnings and Team Manager mode.", "decision": "", "neededBy": "Phase 2", "options": [{"detail": "", "label": "Yes, earns passive income"}, {"detail": "", "label": "Only when you're present"}], "order": 370, "owner": "Team", "recommendation": "", "recommended": "", "status": "Open", "title": "Can hired drivers race for you while you're offline?"}, {"id": "offline-earnings", "area": "Economy", "context": "Adam: most tycoons do this now, and it brings players back.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "", "label": "Yes, capped at a few hours"}, {"detail": "", "label": "Yes, uncapped"}, {"detail": "", "label": "No"}], "order": 260, "owner": "Adam", "recommendation": "", "recommended": "Yes, capped at a few hours", "status": "Open", "title": "Offline earnings: yes, and how much?"}, {"id": "one-car-first", "area": "Core game", "context": "Most championships run two cars. Adam suggested hiring a second driver, possibly a real racer.", "decidedOn": "2026-10-07T15:00:00Z", "decision": "Start with one player and one car. A second car or driver comes later, once players hit the cap. Agreed on the 7 Oct call.", "neededBy": "Pilot", "options": [{"detail": "A second car or driver is a later progression step.", "label": "One player, one car first"}, {"detail": "", "label": "Two cars from the start"}], "order": 40, "owner": "Team", "recommendation": "", "recommended": "One player, one car first", "status": "Decided", "title": "One car or a two-car team at launch?"}, {"id": "pillars", "area": "Core game", "context": "The GDD's pillars section is blank. Proposed: You are the driver. You can see your progress. Racing the real thing. Rivalry that slows you down but never robs you.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "", "label": "Adopt the four as written"}, {"detail": "", "label": "Edit or replace"}], "order": 140, "owner": "Team", "recommendation": "", "recommended": "Adopt the four as written", "status": "Open", "title": "Agree the experience pillars"}, {"id": "pilot-tiers", "area": "Production", "context": "More tiers mean more content to build in about 8 weeks.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "Backyard racer and garage owner.", "label": "Tiers 1–2"}, {"detail": "Adds the club team with your first mechanic and sponsor.", "label": "Tiers 1–3"}], "order": 190, "owner": "Nicole", "recommendation": "Ship two polished tiers. Show tier 3 as 'coming soon' to give players a goal.", "recommended": "Tiers 1–2", "status": "Open", "title": "How many progression tiers ship at Christmas?"}, {"id": "sabotage-principle", "area": "Social & rivalry", "context": "Sabotage is the GDD's main conflict. Steal-style games make victims quit.", "decidedOn": "2026-10-07T15:00:00Z", "decision": "Sabotage slows progress and never takes away earned items. Security and defences can counter it. Agreed on the 7 Oct call.", "neededBy": "Pilot", "options": [{"detail": "Sabotage delays builds or repairs but never removes earned items.", "label": "Slow down only"}, {"detail": "Higher stakes, high churn risk.", "label": "Steal or destroy"}], "order": 30, "owner": "Team", "recommendation": "", "recommended": "Slow down only", "status": "Decided", "title": "Can rivals take things away from you?"}, {"id": "sabotage-specifics", "area": "Social & rivalry", "context": "The principle is agreed: it slows rivals but never robs them. The mechanics are not designed yet.", "decision": "", "neededBy": "Phase 2", "options": [{"detail": "", "label": "Hire NPCs to slow a rival's build or repair"}, {"detail": "", "label": "Cooldowns and protection for new players"}, {"detail": "", "label": "Security and defences you can build"}], "order": 340, "owner": "Team", "recommendation": "", "recommended": "", "status": "Open", "title": "How does sabotage actually work?"}, {"id": "server-model", "area": "Workshop & team", "context": "This affects sabotage, visiting other garages and showing off.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "Classic Roblox tycoon. Rivals and friends are visible.", "label": "Shared server, 6–8 plots"}, {"detail": "", "label": "Private instance per player"}], "order": 160, "owner": "Adam", "recommendation": "", "recommended": "Shared server, 6–8 plots", "status": "Open", "title": "Shared server with plots, or private garages?"}, {"id": "sponsors", "area": "Economy", "context": "The LIVESYNC repo already holds sponsor and brand data. Real brands could fund development.", "decision": "", "neededBy": "Phase 2", "options": [{"detail": "", "label": "Real brands"}, {"detail": "", "label": "Fictional brands"}, {"detail": "", "label": "Fictional at launch, real later"}], "order": 350, "owner": "Will", "recommendation": "", "recommended": "", "status": "Open", "title": "Real sponsor brands or fictional?"}, {"id": "story-intro", "area": "Core game", "context": "Nicole suggested a short story where you fall into the role. It must be skippable.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "The team's driver is ill and you are thrown in.", "label": "Last-minute stand-in driver"}, {"detail": "", "label": "Inherited a rundown garage"}, {"detail": "", "label": "No story"}], "order": 270, "owner": "Nicole", "recommendation": "This leads straight into the race-first tutorial.", "recommended": "Last-minute stand-in driver", "status": "Open", "title": "What is the story premise in the intro?"}, {"id": "tutorial-approach", "area": "Core game", "context": "Retention depends on the first minutes. The team wants it to feel like play, not reading.", "decidedOn": "2026-10-07T15:00:00Z", "decision": "Race first, win regardless, then drive to the plot. The tutorial uses natural barriers, not text walls. Agreed in principle on the 7 Oct call. The details are still to be designed.", "neededBy": "Pilot", "options": [{"detail": "One-lap race you win however you drive, then drive to your plot.", "label": "Race first, then garage"}, {"detail": "The classic tycoon start.", "label": "Garage first"}], "order": 60, "owner": "Adam", "recommendation": "", "recommended": "Race first, then garage", "status": "Decided", "title": "How does the tutorial work?"}, {"id": "upgrade-depth", "area": "Car & racing", "context": "Will suggested keeping it simple (suspension, brakes, engine, chassis, plus exhaust because kids love noise). Adam warned against overwhelming kids or boring adults.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "Engine, brakes, suspension, chassis/weight, tyres, plus cosmetic exhaust and livery. Parts trade speed against handling and reliability.", "label": "5 slots with trade-offs"}, {"detail": "Simplest for kids, less strategy.", "label": "5 slots, numbers only go up"}, {"detail": "Slots plus ride height, gearing and aero sliders, Forza style.", "label": "Full tuning"}], "order": 130, "owner": "Will", "recommendation": "Trade-offs give players reasons to own several builds and make track choice matter, without extra menus.", "recommended": "5 slots with trade-offs", "status": "Open", "title": "How deep should car upgrades go?"}, {"id": "visual-style", "area": "Art & IP", "context": "Will: realistic car models with semi-real tracks blended with Roblox. Homework: everyone brings 3–4 reference images.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "", "label": "Realistic cars, semi-real world"}, {"detail": "", "label": "Stylised throughout"}], "order": 300, "owner": "Team", "recommendation": "", "recommended": "Realistic cars, semi-real world", "status": "Open", "title": "What does the world look like?"}, {"id": "weekend-habit", "area": "Live events", "context": "Roblox records are broken on Saturday afternoons, and real live weekends will be irregular at first.", "decidedOn": "2026-10-07T15:00:00Z", "decision": "Run our own weekend leagues (for example UK and US regional) to build the habit, then turn some into real live weekends. Agreed on the 7 Oct call.", "neededBy": "Pilot", "options": [{"detail": "Championships we run every weekend. Some become real live weekends later.", "label": "Our own weekend leagues"}, {"detail": "", "label": "Live weekends only"}], "order": 50, "owner": "Team", "recommendation": "", "recommended": "Our own weekend leagues", "status": "Decided", "title": "How do we build the weekend habit before real live data is ready?"}, {"id": "workshop-effect", "area": "Workshop & team", "context": "If workshop items are only decoration, the tycoon and racing halves feel separate.", "decision": "", "neededBy": "Pilot", "options": [{"detail": "For example: a ramp unlocks suspension upgrades, a tyre machine speeds repairs, a dyno shows stats.", "label": "Every item unlocks or speeds something"}, {"detail": "", "label": "Mix of functional and cosmetic"}], "order": 170, "owner": "Will", "recommendation": "", "recommended": "Every item unlocks or speeds something", "status": "Open", "title": "What does every workshop item do for racing?"}], "features": [{"id": "car-meets-and-livery-showcase", "description": "Show off builds.", "name": "Car meets and livery showcase", "notes": "", "order": 60, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Social & rivalry"}, {"id": "celebrity-and-pro-driver-appearances", "description": "Special events with known drivers.", "name": "Celebrity and pro driver appearances", "notes": "", "order": 80, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Live events"}, {"id": "client-side-rendering-of-live-cars", "description": "Server receives packages and clients do the visual smoothing.", "name": "Client-side rendering of live cars", "notes": "", "order": 30, "phase": "Prototype", "source": "7 Oct call", "status": "Idea", "system": "Tech & data"}, {"id": "clubs-and-shared-teams", "description": "Co-op teams and team-versus-team championships.", "name": "Clubs and shared teams", "notes": "", "order": 70, "phase": "Pipeline", "source": "GDD", "status": "Idea", "system": "Social & rivalry"}, {"id": "combined-live-leaderboard", "description": "Players ranked against the real drivers' times and positions.", "name": "Combined live leaderboard", "notes": "", "order": 30, "phase": "Pilot", "source": "12 Oct session", "status": "Idea", "system": "Live events"}, {"id": "cosmetics", "description": "Paint, livery editor and exhaust sound.", "name": "Cosmetics", "notes": "", "order": 30, "phase": "Pilot", "source": "7 Oct call", "status": "Idea", "system": "Car build"}, {"id": "customer-repair-jobs", "description": "Fix ordinary cars for cash early in the game.", "name": "Customer repair jobs", "notes": "", "order": 60, "phase": "Phase 2", "source": "Brainstorm", "status": "Idea", "system": "Workshop"}, {"id": "daily-and-weekly-challenges", "description": "Reasons to return between weekends.", "name": "Daily and weekly challenges", "notes": "", "order": 30, "phase": "Phase 2", "source": "GDD", "status": "Idea", "system": "Onboarding & retention"}, {"id": "damage-and-repair", "description": "Light race damage that costs time or cash to fix.", "name": "Damage and repair", "notes": "", "order": 80, "phase": "Phase 2", "source": "Brainstorm", "status": "Idea", "system": "Car build"}, {"id": "description-reward-codes", "description": "Codes in the game description that reward first-day play.", "name": "Description reward codes", "notes": "", "order": 40, "phase": "Pilot", "source": "7 Oct call", "status": "Idea", "system": "Economy"}, {"id": "drivable-starter-car", "description": "One car with arcade-sim handling that you drive from the first second.", "name": "Drivable starter car", "notes": "", "order": 10, "phase": "Demo", "source": "GDD", "status": "Planned", "system": "Driving & racing"}, {"id": "driver-academy", "description": "Develop junior drivers over time.", "name": "Driver academy", "notes": "", "order": 60, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Team"}, {"id": "driver-training-minigames", "description": "Reaction, braking and cornering drills with diminishing returns.", "name": "Driver training minigames", "notes": "", "order": 30, "phase": "Phase 2", "source": "Brainstorm", "status": "Idea", "system": "Team"}, {"id": "dyno-testing", "description": "See power and torque before and after an upgrade.", "name": "Dyno testing", "notes": "", "order": 70, "phase": "Phase 2", "source": "Brainstorm", "status": "Idea", "system": "Car build"}, {"id": "equipment-tiers", "description": "Ramps, tools and lifts that unlock upgrades or speed up repairs.", "name": "Equipment tiers", "notes": "", "order": 30, "phase": "Pilot", "source": "7 Oct call", "status": "Idea", "system": "Workshop"}, {"id": "fake-live-race-for-demo", "description": "Scripted cars lapping a loop or an S-bend, then you join.", "name": "Fake live race for demo", "notes": "", "order": 20, "phase": "Demo", "source": "7 Oct call", "status": "Planned", "system": "Live events"}, {"id": "first-circuit", "description": "One track that works for player races, time trials and ghost replays.", "name": "First circuit", "notes": "", "order": 20, "phase": "Demo", "source": "GDD", "status": "Planned", "system": "Driving & racing"}, {"id": "five-upgrade-slots", "description": "Engine, brakes, suspension, chassis/weight and tyres. Depth is still being decided.", "name": "Five upgrade slots", "notes": "", "order": 10, "phase": "Pilot", "source": "7 Oct call", "status": "Idea", "system": "Car build"}, {"id": "grid-placement-of-equipment", "description": "Place ramps, benches and tools anywhere on a grid.", "name": "Grid placement of equipment", "notes": "", "order": 20, "phase": "Pilot", "source": "GDD", "status": "Idea", "system": "Workshop"}, {"id": "guaranteed-win-first-race", "description": "One lap, and you win however you drive. A podium and the first reward.", "name": "Guaranteed-win first race", "notes": "", "order": 30, "phase": "Pilot", "source": "7 Oct call", "status": "Idea", "system": "Driving & racing"}, {"id": "heritage-showroom", "description": "Keep championship-winning cars along with their history and trophies.", "name": "Heritage showroom", "notes": "", "order": 100, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Car build"}, {"id": "hire-a-mechanic", "description": "An NPC who automates repairs while you race.", "name": "Hire a mechanic", "notes": "", "order": 10, "phase": "Phase 2", "source": "GDD", "status": "Idea", "system": "Team"}, {"id": "hire-a-real-life-racer", "description": "Sign one of the real drivers you raced against as your teammate.", "name": "Hire a real-life racer", "notes": "", "order": 50, "phase": "Pipeline", "source": "7 Oct call", "status": "Idea", "system": "Team"}, {"id": "hire-an-npc-second-driver", "description": "Adds team capacity and extra race entries.", "name": "Hire an NPC second driver", "notes": "", "order": 20, "phase": "Phase 2", "source": "GDD", "status": "Idea", "system": "Team"}, {"id": "historic-race-challenges", "description": "Replays of past real races as ghost challenges between live events.", "name": "Historic race challenges", "notes": "", "order": 40, "phase": "Phase 2", "source": "12 Oct session", "status": "Idea", "system": "Live events"}, {"id": "interactive-tutorial", "description": "Learn by playing, guided by natural barriers rather than text.", "name": "Interactive tutorial", "notes": "", "order": 20, "phase": "Pilot", "source": "7 Oct call", "status": "Idea", "system": "Onboarding & retention"}, {"id": "live-ghost-cars", "description": "Real cars streamed in as non-collidable ghosts during live events.", "name": "Live ghost cars", "notes": "", "order": 10, "phase": "Prototype", "source": "12 Oct session", "status": "Planned", "system": "Live events"}, {"id": "merchandise-and-fan-shop", "description": "Unlocks as reputation grows.", "name": "Merchandise and fan shop", "notes": "", "order": 70, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Economy"}, {"id": "multi-rig-scaling", "description": "Render many streamed objects, not just one rig.", "name": "Multi-rig scaling", "notes": "", "order": 10, "phase": "Prototype", "source": "7 Oct call", "status": "In progress", "system": "Tech & data"}, {"id": "multiple-racing-disciplines", "description": "Rally, drift, endurance and other classes after the first regulation.", "name": "Multiple racing disciplines", "notes": "", "order": 110, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Driving & racing"}, {"id": "notice-board-countdown", "description": "A countdown to the next league or live event, shown in your garage.", "name": "Notice board countdown", "notes": "", "order": 50, "phase": "Pilot", "source": "GDD", "status": "Idea", "system": "Workshop"}, {"id": "offline-earnings", "description": "Your garage earns while you're away, up to a cap.", "name": "Offline earnings", "notes": "", "order": 30, "phase": "Pilot", "source": "7 Oct call", "status": "Idea", "system": "Economy"}, {"id": "packet-fail-safes-and-extrapolation", "description": "If data drops, extrapolate all cars together so the race still looks smooth.", "name": "Packet fail-safes and extrapolation", "notes": "", "order": 20, "phase": "Prototype", "source": "7 Oct call", "status": "Idea", "system": "Tech & data"}, {"id": "performance-index", "description": "One class rating used for matchmaking and live event entry.", "name": "Performance index", "notes": "", "order": 40, "phase": "Pilot", "source": "Brainstorm", "status": "Idea", "system": "Car build"}, {"id": "physical-assembly", "description": "Hoist an engine in, bolt the wheels on: short, satisfying interactions.", "name": "Physical assembly", "notes": "", "order": 60, "phase": "Phase 2", "source": "Brainstorm", "status": "Idea", "system": "Car build"}, {"id": "pit-crew-minigame", "description": "Timed tyre changes. Faster crews save seconds in races.", "name": "Pit crew minigame", "notes": "", "order": 40, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Team"}, {"id": "pit-strategy", "description": "Choose when to pit, which tyres and which repairs.", "name": "Pit strategy", "notes": "", "order": 90, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Driving & racing"}, {"id": "player-vs-player-races", "description": "Lobby races between players on the same server.", "name": "Player vs player races", "notes": "", "order": 40, "phase": "Pilot", "source": "GDD", "status": "Idea", "system": "Driving & racing"}, {"id": "qualifying", "description": "Lap times set the grid positions.", "name": "Qualifying", "notes": "", "order": 70, "phase": "Phase 2", "source": "Brainstorm", "status": "Idea", "system": "Driving & racing"}, {"id": "race-prize-cash", "description": "The main source of cash.", "name": "Race prize cash", "notes": "", "order": 10, "phase": "Pilot", "source": "Brainstorm", "status": "Idea", "system": "Economy"}, {"id": "race-transporter-and-paddock", "description": "A travelling operation that shows off your team's scale.", "name": "Race transporter and paddock", "notes": "", "order": 90, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Workshop"}, {"id": "racing-licence", "description": "Licence challenges that gate higher leagues and live events.", "name": "Racing licence", "notes": "", "order": 50, "phase": "Phase 2", "source": "Brainstorm", "status": "Idea", "system": "Economy"}, {"id": "rare-event-parts", "description": "Special components earned from challenges and live events.", "name": "Rare event parts", "notes": "", "order": 90, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Car build"}, {"id": "real-world-race-weekend-challenges", "description": "Challenges tied to what is happening in the real series that weekend.", "name": "Real-world race weekend challenges", "notes": "", "order": 70, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Live events"}, {"id": "regional-live-leagues", "description": "UK and US live weekends, later scaled to wider live weekends.", "name": "Regional live leagues", "notes": "", "order": 50, "phase": "Phase 2", "source": "GDD", "status": "Idea", "system": "Live events"}, {"id": "reputation-unlocks", "description": "Results raise reputation, which unlocks tiers, sponsors and hires.", "name": "Reputation unlocks", "notes": "", "order": 20, "phase": "Pilot", "source": "Brainstorm", "status": "Idea", "system": "Economy"}, {"id": "sabotage-hut", "description": "An upgradable base for stronger sabotage, hidden somewhere dodgy.", "name": "Sabotage hut", "notes": "", "order": 40, "phase": "Pipeline", "source": "7 Oct call", "status": "Idea", "system": "Social & rivalry"}, {"id": "sabotage-npcs", "description": "Pay NPCs to slow a rival's build or repair. Never steals.", "name": "Sabotage NPCs", "notes": "", "order": 10, "phase": "Phase 2", "source": "7 Oct call", "status": "Idea", "system": "Social & rivalry"}, {"id": "second-car", "description": "Run a second car once the first is maxed out.", "name": "Second car", "notes": "", "order": 110, "phase": "Pipeline", "source": "7 Oct call", "status": "Idea", "system": "Car build"}, {"id": "security-and-defences", "description": "Guards and defences against sabotage.", "name": "Security and defences", "notes": "", "order": 20, "phase": "Phase 2", "source": "7 Oct call", "status": "Idea", "system": "Social & rivalry"}, {"id": "skippable-story-intro", "description": "A short premise that leads straight into the first race.", "name": "Skippable story intro", "notes": "", "order": 10, "phase": "Pilot", "source": "7 Oct call", "status": "Idea", "system": "Onboarding & retention"}, {"id": "solid-live-cars-with-respawn", "description": "Real cars become physical objects. If knocked out, they respawn in their correct real-world position.", "name": "Solid live cars with respawn", "notes": "", "order": 60, "phase": "Pipeline", "source": "12 Oct session", "status": "Idea", "system": "Live events"}, {"id": "specialist-rooms", "description": "Engine shop, paint booth and dyno room. Each unlocks a capability.", "name": "Specialist rooms", "notes": "", "order": 70, "phase": "Phase 2", "source": "Brainstorm", "status": "Idea", "system": "Workshop"}, {"id": "sponsors", "description": "Sign sponsors for income and liveries.", "name": "Sponsors", "notes": "", "order": 60, "phase": "Phase 2", "source": "Brainstorm", "status": "Idea", "system": "Economy"}, {"id": "starter-plot-and-shed", "description": "An empty plot with a shed, reached by driving there after the first race.", "name": "Starter plot and shed", "notes": "", "order": 10, "phase": "Pilot", "source": "7 Oct call", "status": "Idea", "system": "Workshop"}, {"id": "team-branding-on-hq", "description": "Team colours, wall graphics and lighting.", "name": "Team branding on HQ", "notes": "", "order": 80, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Workshop"}, {"id": "team-manager-mode", "description": "Watch your hired driver race from broadcast cameras and make strategy calls.", "name": "Team Manager mode", "notes": "", "order": 100, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Driving & racing"}, {"id": "themed-months", "description": "Silly limited-time builds such as moats and turrets, while respecting driving IP.", "name": "Themed months", "notes": "", "order": 50, "phase": "Pipeline", "source": "7 Oct call", "status": "Idea", "system": "Social & rivalry"}, {"id": "time-trials-with-your-own-ghost", "description": "Beat your best lap to feel each upgrade.", "name": "Time trials with your own ghost", "notes": "", "order": 50, "phase": "Pilot", "source": "Brainstorm", "status": "Idea", "system": "Driving & racing"}, {"id": "trade-off-builds", "description": "Speed, handling, braking and reliability profiles, so you own builds for different tracks.", "name": "Trade-off builds", "notes": "", "order": 50, "phase": "Phase 2", "source": "Brainstorm", "status": "Idea", "system": "Car build"}, {"id": "tutorial-funnel-analytics", "description": "AnalyticsService events for each tutorial step, plus economy events.", "name": "Tutorial funnel analytics", "notes": "", "order": 40, "phase": "Pilot", "source": "7 Oct call", "status": "Idea", "system": "Tech & data"}, {"id": "visible-upgrades", "description": "Every part changes how the car looks: wheels, splitter, roll cage, stripped interior.", "name": "Visible upgrades", "notes": "", "order": 20, "phase": "Pilot", "source": "Brainstorm", "status": "Idea", "system": "Car build"}, {"id": "visit-other-garages", "description": "Walk round rivals' and friends' plots.", "name": "Visit other garages", "notes": "", "order": 30, "phase": "Phase 2", "source": "Brainstorm", "status": "Idea", "system": "Social & rivalry"}, {"id": "visual-workshop-tiers", "description": "From a dirty concrete shed to a proper garage. Each tier looks like an achievement.", "name": "Visual workshop tiers", "notes": "", "order": 40, "phase": "Pilot", "source": "Brainstorm", "status": "Idea", "system": "Workshop"}, {"id": "weather-and-track-conditions", "description": "Wet races that change which build is best.", "name": "Weather and track conditions", "notes": "", "order": 80, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Driving & racing"}, {"id": "weekend-league-championships", "description": "Our own weekend rounds, such as UK and US regional leagues.", "name": "Weekend league championships", "notes": "", "order": 60, "phase": "Pilot", "source": "7 Oct call", "status": "Idea", "system": "Driving & racing"}, {"id": "your-own-parts-brand", "description": "Sell parts you develop.", "name": "Your own parts brand", "notes": "", "order": 80, "phase": "Pipeline", "source": "Brainstorm", "status": "Idea", "system": "Economy"}], "notes": []}</script>
+<script>
+(() => {
+  const SYSTEMS = ["Driving & racing","Car build","Workshop","Team","Live events","Economy","Social & rivalry","Onboarding & retention","Tech & data"];
+  const PHASES = ["Demo","Prototype","Pilot","Phase 2","Pipeline"];
+  const STATUSES = ["Idea","Planned","In progress","Done","Cut"];
+  const DSTAT = ["Open","Decided","Parked"];
+  const NEEDED = ["Demo","Prototype","Pilot","Phase 2"];
+  const AREAS = ["Core game","Car & racing","Workshop & team","Live events","Economy","Social & rivalry","Audience & platform","Art & IP","Production"];
+
+  const S = { decisions: [], notes: [], features: [], db: null, user: null, myId: null, writable: null, loaded: { d:false, f:false } };
+  const ui = { tab: "overview", mechPhase: "", mechSystem: "", decStatus: "Open", decNeeded: "", openDec: new Set(), pending: {} };
+
+  const $ = (s, r = document) => r.querySelector(s);
+  function h(tag, attrs, ...kids) {
+    const el = document.createElement(tag);
+    if (attrs) for (const [k, v] of Object.entries(attrs)) {
+      if (v == null || v === false) continue;
+      if (k === "class") el.className = v;
+      else if (k === "text") el.textContent = v;
+      else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? "" : v);
+    }
+    for (const k of kids.flat()) if (k != null && k !== false) el.append(k.nodeType ? k : document.createTextNode(String(k)));
+    return el;
+  }
+  const str = (v) => (typeof v === "string" ? v : "");
+  const fmtDate = (iso) => { const d = new Date(iso); return isNaN(d) ? "" : d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }); };
+  const byOrder = (a, b) => (a.order ?? 999) - (b.order ?? 999) || str(a.name || a.title).localeCompare(str(b.name || b.title));
+  const ro = () => S.writable === false || !S.db;
+
+  /* ---------- tabs ---------- */
+  const TABS = ["overview","loop","mechanics","decisions","pipeline"];
+  function setTab(t, push) {
+    if (!TABS.includes(t)) t = "overview";
+    ui.tab = t;
+    for (const name of TABS) {
+      $("#panel-" + name).hidden = name !== t;
+      $("#tab-" + name).setAttribute("aria-selected", String(name === t));
+    }
+    if (push) { try { history.replaceState(null, "", "#" + t); } catch (e) { location.hash = t; } }
+  }
+  document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => setTab(b.dataset.tab, true)));
+  setTab((location.hash || "").slice(1), false);
+
+  /* ---------- filters ---------- */
+  function pills(container, values, current, onPick, allLabel) {
+    container.replaceChildren();
+    const opts = [["", allLabel], ...values.map(v => [v, v])];
+    for (const [v, label] of opts) {
+      container.append(h("button", { class: "pill", type: "button", "aria-pressed": String(current === v), onclick: () => onPick(v) }, label));
+    }
+  }
+  function fillSelect(sel, values, current, blank) {
+    sel.replaceChildren();
+    if (blank) sel.append(h("option", { value: "" }, blank));
+    for (const v of values) { const o = h("option", { value: v }, v); if (v === current) o.selected = true; sel.append(o); }
+  }
+  fillSelect($("#mechSystem"), SYSTEMS, "", "All systems");
+  $("#mechSystem").addEventListener("change", e => { ui.mechSystem = e.target.value; renderMech(); });
+  fillSelect($("#mfSystem"), SYSTEMS, SYSTEMS[0]);
+  fillSelect($("#mfPhase"), PHASES, "Pilot");
+  fillSelect($("#pfSystem"), SYSTEMS, SYSTEMS[0]);
+
+  /* ---------- writes ---------- */
+  async function write(fn, flagEl) {
+    if (ro()) return false;
+    try { await fn(); if (flagEl) { flagEl.textContent = "Saved"; setTimeout(() => { flagEl.textContent = ""; }, 2000); } return true; }
+    catch (e) {
+      if (e && e.code === "invalid_argument" && S.writable == null) { S.writable = false; renderAll(); }
+      if (flagEl) flagEl.textContent = e && e.code === "quota_exceeded" ? "The database is full. Delete old items first." : "Not saved. You may only have view access.";
+      return false;
+    }
+  }
+
+  /* ---------- deferred render while typing ---------- */
+  function busyIn(container) {
+    const a = document.activeElement;
+    return a && container.contains(a) && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName);
+  }
+  function guarded(key, container, fn) {
+    if (busyIn(container)) { ui.pending[key] = true; return; }
+    ui.pending[key] = false; fn();
+  }
+  document.addEventListener("focusout", () => setTimeout(() => {
+    if (ui.pending.dec) renderDec();
+    if (ui.pending.mech) renderMech();
+    if (ui.pending.pipe) renderPipe();
+  }, 0));
+
+  /* ---------- overview stats ---------- */
+  function renderStats() {
+    if (!S.loaded.d && !S.loaded.f) return;
+    const open = S.decisions.filter(d => d.status === "Open");
+    $("#stOpen").textContent = open.length;
+    const demo = open.filter(d => d.neededBy === "Demo" || d.neededBy === "Prototype").length;
+    $("#stOpenSub").textContent = demo ? demo + " needed before the demo or prototype" : "none blocking the demo";
+    $("#stDecided").textContent = S.decisions.filter(d => d.status === "Decided").length;
+    $("#stPilot").textContent = S.features.filter(f => ["Demo","Prototype","Pilot"].includes(f.phase) && f.status !== "Cut").length;
+    $("#stPipe").textContent = S.features.filter(f => f.phase === "Pipeline").length;
+  }
+
+  /* ---------- mechanics ---------- */
+  function renderMech() {
+    const box = $("#mechList");
+    pills($("#mechFilters"), PHASES, ui.mechPhase, v => { ui.mechPhase = v; renderMech(); }, "All phases");
+    if (!S.loaded.f) return;
+    guarded("mech", box, () => {
+      box.replaceChildren();
+      const list = S.features.filter(f => (!ui.mechPhase || f.phase === ui.mechPhase) && (!ui.mechSystem || f.system === ui.mechSystem));
+      if (!list.length) { box.append(h("p", { class: "empty dim" }, S.features.length ? "No mechanics match these filters." : "No mechanics yet. Add the first one below.")); return; }
+      const systems = [...SYSTEMS, ...new Set(list.map(f => f.system).filter(s => !SYSTEMS.includes(s)))];
+      for (const sys of systems) {
+        const items = list.filter(f => f.system === sys).sort(byOrder);
+        if (!items.length) continue;
+        box.append(h("h3", { class: "area-h" }, sys, " ", h("span", { class: "dim num", text: "(" + items.length + ")" })));
+        for (const f of items) {
+          const phaseSel = h("select", { "aria-label": "Phase for " + str(f.name), disabled: ro() });
+          fillSelect(phaseSel, PHASES, f.phase);
+          phaseSel.addEventListener("change", () => write(() => S.db.doc("features/" + f.id).update({ phase: phaseSel.value })));
+          const statSel = h("select", { "aria-label": "Status for " + str(f.name), disabled: ro() });
+          fillSelect(statSel, STATUSES, f.status);
+          statSel.addEventListener("change", () => write(() => S.db.doc("features/" + f.id).update({ status: statSel.value })));
+          box.append(h("div", { class: "mech" },
+            h("div", null, h("div", { class: "name", text: str(f.name) }), h("div", { class: "desc", text: str(f.description) }), f.source ? h("div", { class: "src", text: "Source: " + str(f.source) }) : null),
+            h("div", null, h("div", { class: "label dim" }, "Phase"), phaseSel),
+            h("div", null, h("div", { class: "label dim" }, "Status"), statSel)
+          ));
+        }
+      }
+    });
+  }
+  $("#mechForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const name = $("#mfName").value.trim(); if (!name) return;
+    const ok = await write(() => S.db.collection("features").add({ name, description: $("#mfDesc").value.trim(), system: $("#mfSystem").value, phase: $("#mfPhase").value, status: "Idea", source: "Added on page", notes: "", order: 900, createdBy: S.myId, createdAt: new Date().toISOString() }), $("#mfSaved"));
+    if (ok) { $("#mfName").value = ""; $("#mfDesc").value = ""; }
+  });
+
+  /* ---------- pipeline ---------- */
+  function renderPipe() {
+    const box = $("#pipeList");
+    if (!S.loaded.f) return;
+    guarded("pipe", box, () => {
+      box.replaceChildren();
+      const items = S.features.filter(f => f.phase === "Pipeline").sort((a, b) => SYSTEMS.indexOf(a.system) - SYSTEMS.indexOf(b.system) || byOrder(a, b));
+      if (!items.length) { box.append(h("p", { class: "empty dim" }, "Nothing in the pipeline yet. Add a feature below or set a mechanic's phase to Pipeline.")); return; }
+      for (const f of items) {
+        const notes = h("textarea", { "aria-label": "Review notes for " + str(f.name), placeholder: "Review notes: what would need to be true to build this?", disabled: ro() });
+        notes.value = str(f.notes);
+        const flag = h("span", { class: "saved", "aria-live": "polite" });
+        notes.addEventListener("change", () => write(() => S.db.doc("features/" + f.id).update({ notes: notes.value }), flag));
+        const move = h("select", { "aria-label": "Move " + str(f.name) + " to phase", disabled: ro() });
+        fillSelect(move, PHASES, "Pipeline");
+        move.addEventListener("change", () => write(() => S.db.doc("features/" + f.id).update({ phase: move.value, status: move.value === "Pipeline" ? f.status : "Planned" })));
+        box.append(h("div", { class: "card" },
+          h("div", { class: "chips" }, h("span", { class: "chip soft", text: str(f.system) }), f.source ? h("span", { class: "dim", style: "font-size:.75rem", text: "Source: " + str(f.source) }) : null),
+          h("h3", { text: str(f.name) }),
+          f.description ? h("p", { style: "margin:0", text: str(f.description) }) : null,
+          notes,
+          h("div", { class: "decide-row" }, h("label", { class: "label dim" }, "Move to"), move, flag)
+        ));
+      }
+    });
+  }
+  $("#pipeForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const name = $("#pfName").value.trim(); if (!name) return;
+    const ok = await write(() => S.db.collection("features").add({ name, description: $("#pfDesc").value.trim(), system: $("#pfSystem").value, phase: "Pipeline", status: "Idea", source: "Added on page", notes: "", order: 900, createdBy: S.myId, createdAt: new Date().toISOString() }), $("#pfSaved"));
+    if (ok) { $("#pfName").value = ""; $("#pfDesc").value = ""; }
+  });
+
+  /* ---------- decisions ---------- */
+  let profiles = {};
+  async function resolvePeople() {
+    if (!S.user) return;
+    const ids = [...new Set(S.notes.map(n => n.by).filter(x => typeof x === "string"))];
+    if (!ids.length) return;
+    try { profiles = await S.user.profiles(ids); } catch (e) {}
+  }
+  function chipFor(status) { return h("span", { class: "chip " + (status === "Decided" ? "decided" : status === "Parked" ? "parked" : ""), text: status || "Open" }); }
+
+  function renderDec() {
+    const box = $("#decList");
+    const counts = Object.fromEntries(DSTAT.map(s => [s, S.decisions.filter(d => (d.status || "Open") === s).length]));
+    pills($("#decStatus"), DSTAT, ui.decStatus, v => { ui.decStatus = v; renderDec(); }, "All statuses");
+    $("#decStatus").querySelectorAll(".pill").forEach(p => { const k = p.textContent; if (counts[k] != null) p.textContent = k + " · " + counts[k]; });
+    pills($("#decNeeded"), NEEDED.map(n => n), ui.decNeeded, v => { ui.decNeeded = v; renderDec(); }, "Needed any time");
+    $("#decNeeded").querySelectorAll(".pill").forEach(p => { if (NEEDED.includes(p.textContent)) p.textContent = "Before " + p.textContent; });
+    if (!S.loaded.d) return;
+    guarded("dec", box, () => {
+      box.replaceChildren();
+      const list = S.decisions.filter(d => (!ui.decStatus || (d.status || "Open") === ui.decStatus) && (!ui.decNeeded || d.neededBy === ui.decNeeded));
+      if (!list.length) { box.append(h("p", { class: "empty dim" }, S.decisions.length ? "No decisions match these filters." : "No decisions logged yet.")); return; }
+      const areas = [...AREAS, ...new Set(list.map(d => d.area).filter(a => !AREAS.includes(a)))];
+      for (const area of areas) {
+        const items = list.filter(d => d.area === area).sort(byOrder);
+        if (!items.length) continue;
+        box.append(h("h3", { class: "area-h" }, area));
+        for (const d of items) box.append(decItem(d));
+      }
+    });
+  }
+
+  function decItem(d) {
+    const det = h("details", { class: "dec" });
+    if (ui.openDec.has(d.id)) det.open = true;
+    det.addEventListener("toggle", () => { det.open ? ui.openDec.add(d.id) : ui.openDec.delete(d.id); });
+    const meta = h("div", { class: "chips" }, chipFor(d.status), d.neededBy ? h("span", { class: "chip soft", text: "By " + d.neededBy }) : null, d.owner ? h("span", { class: "chip soft", text: str(d.owner) }) : null);
+    det.append(h("summary", null, h("div", { class: "q", text: str(d.title) }), meta));
+
+    const body = h("div", { class: "dec-body" });
+    if (d.context) body.append(h("div", null, h("div", { class: "label dim" }, "Why it matters"), h("p", { style: "margin:4px 0 0", text: str(d.context) })));
+    const opts = Array.isArray(d.options) ? d.options : [];
+    if (opts.length) {
+      const ol = h("ol", { class: "opts" });
+      for (const o of opts) {
+        if (!o || typeof o !== "object") continue;
+        ol.append(h("li", null, h("b", { text: str(o.label) }), o.label && o.label === d.recommended ? h("span", { class: "rec" }, "Recommended") : null, o.detail ? h("div", { text: str(o.detail) }) : null));
+      }
+      body.append(h("div", null, h("div", { class: "label dim" }, "Options"), ol));
+    }
+    if (d.recommendation) body.append(h("div", null, h("div", { class: "label dim" }, "Recommendation"), h("p", { style: "margin:4px 0 0", text: str(d.recommendation) })));
+
+    // decision editor
+    const txt = h("textarea", { "aria-label": "Decision for: " + str(d.title), placeholder: "What did we decide, and why?", disabled: ro() });
+    txt.value = str(d.decision);
+    const st = h("select", { "aria-label": "Status", disabled: ro() }); fillSelect(st, DSTAT, d.status || "Open");
+    const own = h("input", { type: "text", "aria-label": "Owner", placeholder: "Owner", disabled: ro(), size: "14" }); own.value = str(d.owner);
+    const flag = h("span", { class: "saved", "aria-live": "polite" });
+    const save = h("button", { class: "btn", type: "button", disabled: ro() }, "Save decision");
+    save.addEventListener("click", () => {
+      const patch = { decision: txt.value.trim(), status: st.value, owner: own.value.trim() };
+      if (st.value === "Decided" && d.status !== "Decided") patch.decidedOn = new Date().toISOString();
+      write(() => S.db.doc("decisions/" + d.id).update(patch), flag);
+    });
+    const decBlock = h("div", { class: "decide" }, h("div", { class: "label dim" }, "Decision"));
+    if (d.decidedOn && d.status === "Decided") decBlock.append(h("div", { class: "dim", style: "font-size:.8rem", text: "Decided " + fmtDate(d.decidedOn) }));
+    decBlock.append(txt, h("div", { class: "decide-row" }, st, own, save, flag));
+    body.append(decBlock);
+
+    // discussion
+    const notes = S.notes.filter(n => n.decisionId === d.id).sort((a, b) => str(a.at).localeCompare(str(b.at)));
+    const disc = h("div", null, h("div", { class: "label dim" }, "Discussion", notes.length ? " · " + notes.length : ""));
+    for (const n of notes) {
+      const who = (n.by && profiles[n.by] && profiles[n.by].name) || "Someone";
+      disc.append(h("div", { class: "note" }, h("div", { class: "who", text: who + " · " + fmtDate(n.at) }), h("div", { text: str(n.text) })));
+    }
+    const add = h("textarea", { "aria-label": "Add to discussion", placeholder: "Add a thought, question or link…", disabled: ro(), style: "margin-top:8px;min-height:56px" });
+    const addFlag = h("span", { class: "saved", "aria-live": "polite" });
+    const addBtn = h("button", { class: "btn ghost", type: "button", disabled: ro() }, "Add note");
+    addBtn.addEventListener("click", async () => {
+      const text = add.value.trim(); if (!text) return;
+      const ok = await write(() => S.db.collection("notes").add({ decisionId: d.id, text, by: S.myId, at: new Date().toISOString() }), addFlag);
+      if (ok) add.value = "";
+    });
+    disc.append(add, h("div", { class: "decide-row", style: "margin-top:8px" }, addBtn, addFlag));
+    body.append(disc);
+    det.append(body);
+    return det;
+  }
+
+  function renderAll() { renderStats(); renderMech(); renderDec(); renderPipe(); }
+  renderAll();
+
+  /* ---------- data ---------- */
+  async function boot() {
+    const notice = $("#dbNotice");
+    const use = window.claude && window.claude.use ? (n) => window.claude.use(n) : null;
+    const db = use ? await use("db") : null;
+    if (!db) {
+      let snap = null;
+      try { snap = JSON.parse(($("#snapshot") || {}).textContent || "null"); } catch (e) {}
+      if (snap && Array.isArray(snap.decisions) && snap.decisions.length) {
+        S.decisions = snap.decisions; S.features = Array.isArray(snap.features) ? snap.features : []; S.notes = Array.isArray(snap.notes) ? snap.notes : [];
+        S.loaded.d = S.loaded.f = true;
+        notice.hidden = false;
+        notice.replaceChildren("Read-only snapshot from " + fmtDate(snap.takenAt) + ". To record decisions and add notes, use the ",
+          h("a", { href: snap.liveUrl || "#", target: "_blank", rel: "noopener" }, "live page on claude.ai"), ".");
+        for (const id of ["#addMech","#addPipe"]) $(id).hidden = true;
+        renderAll();
+        return;
+      }
+      notice.hidden = false;
+      notice.textContent = "The shared decision log and mechanics aren't available in this view. Open the page on claude.ai while signed in to see and edit them.";
+      for (const id of ["#decList","#mechList","#pipeList"]) $(id).replaceChildren(h("p", { class: "empty dim" }, "Shared data unavailable in this view."));
+      for (const id of ["#addMech","#addPipe"]) $(id).hidden = true;
+      return;
+    }
+    S.db = db;
+    S.user = use ? await use("user") : null;
+    if (S.user) {
+      try { S.myId = await S.user.id(); } catch (e) {}
+      try { S.writable = await S.user.can("data.write"); } catch (e) {}
+    }
+    if (S.writable === false) {
+      notice.hidden = false;
+      notice.textContent = "You have view access. Ask Nicole for Contributor access to record decisions and add notes.";
+      for (const id of ["#addMech","#addPipe"]) $(id).hidden = true;
+    }
+    const onErr = () => { notice.hidden = false; notice.textContent = "Live updates stopped. Reload the page to reconnect."; };
+    db.collection("decisions").onSnapshot(snap => {
+      S.decisions = snap.docs.map(x => ({ id: x.id, ...x.data() })); S.loaded.d = true; renderStats(); renderDec();
+    }, onErr);
+    db.collection("notes").onSnapshot(async snap => {
+      S.notes = snap.docs.map(x => ({ id: x.id, ...x.data() })); await resolvePeople(); renderDec();
+    }, onErr);
+    db.collection("features").onSnapshot(snap => {
+      S.features = snap.docs.map(x => ({ id: x.id, ...x.data() })); S.loaded.f = true; renderStats(); renderMech(); renderPipe();
+    }, onErr);
+  }
+  boot();
+})();
+</script>
+
+</body>
+</html>
