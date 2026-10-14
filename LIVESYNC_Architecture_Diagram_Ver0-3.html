@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIVESYNC - Proposed System Architecture Ver 0.3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #0036db;
+      --white: #ffffff;
+      --black: #252525;
+      --red: #e52626;
+      --panel: #f4f6fb;
+      --border: #d4dae8;
+      --content-max: 860px;
+      --base: 0.93rem;
+    }
+
+    body {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 400;
+      font-size: var(--base);
+      color: var(--black);
+      background: var(--white);
+      max-width: var(--content-max);
+      margin: 0 auto;
+      padding: 0 clamp(24px, 5vw, 48px) clamp(24px, 5vw, 48px);
+    }
+
+    /* ── TOP BAR ── */
+    .top-bar {
+      background: var(--blue);
+      color: var(--white);
+      font-size: calc(var(--base) * 0.75);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 10px clamp(24px, 5vw, 48px);
+      margin: 0 -48px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ── DOC TITLE ── */
+    .doc-title {
+      font-size: calc(var(--base) * 0.84);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 20px;
+    }
+
+    /* ── LAYER LABEL ── */
+    .layer-label {
+      font-size: calc(var(--base) * 0.84);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--black);
+      margin: 24px 0 10px;
+    }
+
+    /* ── SECTION WRAPPERS ── */
+    .layer {
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 14px 10px;
+      margin-bottom: 0;
+      position: relative;
+    }
+
+    /* highlighted AWS layer */
+    .layer--aws {
+      border-color: var(--blue);
+      border-width: 2px;
+    }
+
+    /* ── GRID: two-column node layout ── */
+    .node-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    /* single node spanning full width */
+    .node-grid--full .node {
+      grid-column: 1 / -1;
+    }
+
+    /* ── NODE CARD ── */
+    .node {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 12px;
+    }
+
+    .node__title {
+      font-size: calc(var(--base) * 0.88);
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 5px;
+      line-height: 1.3;
+    }
+
+    .node__body {
+      font-size: calc(var(--base) * 0.82);
+      line-height: 1.55;
+      color: var(--black);
+    }
+
+    .node__body span.dot {
+      display: inline-block;
+      width: 3px;
+      height: 3px;
+      background: var(--black);
+      border-radius: 50%;
+      vertical-align: middle;
+      margin: 0 4px;
+      position: relative;
+      top: -1px;
+    }
+
+    /* removed node - strikethrough style */
+    .node--removed {
+      opacity: 0.38;
+      text-decoration: line-through;
+    }
+
+    /* ── CONNECTOR ARROW ── */
+    .connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 4px 0;
+      gap: 0;
+    }
+
+    .connector__line {
+      width: 2px;
+      background: var(--border);
+      flex: 1;
+      min-height: 20px;
+    }
+
+    .connector__arrow {
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid var(--border);
+    }
+
+    .connector__label {
+      font-size: calc(var(--base) * 0.78);
+      color: #6b7280;
+      font-style: italic;
+      text-align: right;
+      align-self: flex-end;
+      padding-right: 4px;
+      margin-bottom: 2px;
+      line-height: 1.4;
+    }
+
+    /* connector row: label left, arrow right-aligned or centered */
+    .connector-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 6px 0;
+    }
+    .connector-row .connector-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .connector-row .connector-col .connector__line { min-height: 32px; }
+    .connector-row .label-col {
+      font-size: calc(var(--base) * 0.78);
+      color: #6b7280;
+      font-style: italic;
+      line-height: 1.5;
+      padding-top: 4px;
+      flex: 1;
+    }
+
+    /* right-side labels (connector floated right) */
+    .connector-right {
+      display: flex;
+      justify-content: flex-end;
+      padding: 6px 0;
+    }
+    .connector-right .inner {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .connector-right .inner .label-col {
+      font-size: calc(var(--base) * 0.78);
+      color: #6b7280;
+      font-style: italic;
+      line-height: 1.5;
+      padding-top: 4px;
+      text-align: right;
+    }
+    .connector-right .inner .connector-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .connector-right .inner .connector-col .connector__line { min-height: 32px; }
+
+    /* ── BOTTOM BAR ── */
+    .bottom-bar {
+      background: var(--blue);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px clamp(24px, 5vw, 48px);
+      margin: 40px -48px 0;
+      font-size: calc(var(--base) * 0.86);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+
+    .bottom-bar .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .accent-dot { color: var(--red); font-size: 1.3em; line-height: 1; }
+    .logo-text { font-size: calc(var(--base) * 0.9); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+
+    /* ── NEW badge ── */
+    .badge-new {
+      display: inline-block;
+      background: var(--blue);
+      color: var(--white);
+      font-size: calc(var(--base) * 0.72);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      border-radius: 3px;
+      padding: 1px 5px;
+      vertical-align: middle;
+      margin-left: 4px;
+      text-transform: uppercase;
+    }
+
+    /* ── CHANGED badge ── */
+    .badge-changed {
+      display: inline-block;
+      background: var(--panel);
+      color: var(--black);
+      border: 1px solid var(--border);
+      font-size: calc(var(--base) * 0.72);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      border-radius: 3px;
+      padding: 1px 5px;
+      vertical-align: middle;
+      margin-left: 4px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span>Proposed System Architecture</span>
+    <span>Ver 0.3</span>
+  </div>
+
+  <p class="doc-title">LIVESYNC Proposed System Architecture</p>
+
+  <!-- ══════════════════════════════════════
+       1.X — MOTION CAPTURE & INGESTION
+  ══════════════════════════════════════ -->
+  <p class="layer-label">1.X — Motion Capture &amp; Ingestion</p>
+  <div class="layer">
+    <div class="node-grid">
+
+      <div class="node">
+        <p class="node__title">[1.1] Rezzil tracking system</p>
+        <p class="node__body">Hawkeye cameras at the venue capture players, ball, officials and other moving entities.<span class="dot"></span>Outputs proprietary .exar over WebSocket at 25 fps.</p>
+      </div>
+
+      <div class="node">
+        <p class="node__title">[1.2] WebSocket client</p>
+        <p class="node__body">Subscribes to the Rezzil stream.<span class="dot"></span>Receives new_game (manifest, once) and frame (every 40 ms).<span class="dot"></span>Passes raw .exar into the AWS load balancer.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- connector -->
+  <div class="connector-right">
+    <div class="inner">
+      <div class="label-col">.exar over WebSocket · 25 fps</div>
+      <div class="connector-col">
+        <div class="connector__line"></div>
+        <div class="connector__arrow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       2.X — AWS PROCESSING SERVER
+  ══════════════════════════════════════ -->
+  <p class="layer-label">2.X — AWS Processing Server <span style="font-size:calc(var(--base)*0.78);font-weight:400;letter-spacing:0;text-transform:none;color:#6b7280;">· Custom Data Engine [2.8]</span></p>
+  <div class="layer layer--aws">
+    <div class="node-grid" style="margin-bottom:8px;">
+
+      <div class="node" style="grid-column:1/-1;">
+        <p class="node__title">[2.1] Load balancer <span class="badge-new">New</span></p>
+        <p class="node__body">Routes each new_game connection to a dedicated per-match worker.<span class="dot"></span>Ensures frames stay ordered and local per session.<span class="dot"></span>Provisions and retires workers; signals autoscaling when multiple matches run concurrently.</p>
+      </div>
+
+    </div>
+
+    <div class="node-grid">
+
+      <div class="node">
+        <p class="node__title">[2.2] Session initialisation <span class="badge-changed">Updated</span></p>
+        <p class="node__body">Parse new_game manifest · player IDs · team / kit / pitch / physical attributes.<span class="dot"></span>Extracts bone offsets (*_m_pos_*) and scales (*_scl_*) once - not repeated per frame.</p>
+      </div>
+
+      <div class="node">
+        <p class="node__title">[2.3] Entity registry <span class="badge-changed">Updated</span></p>
+        <p class="node__body">Rezzil IDs &#8594; LIVESYNC IDs.<span class="dot"></span>Stores per-player skeleton config from manifest.<span class="dot"></span>Drives zone-of-influence tiering and degradation ladder per frame.</p>
+      </div>
+
+      <div class="node">
+        <p class="node__title">[2.4] Frame intake &amp; validation <span class="badge-changed">Updated</span></p>
+        <p class="node__body">Validate / drop corrupt frames · deduplicate frameNumbers.<span class="dot"></span>Reorder buffer with timeout for out-of-order frames.<span class="dot"></span>Gap frequency logged to observability layer.</p>
+      </div>
+
+      <div class="node">
+        <p class="node__title">[2.5] Coordinate transform</p>
+        <p class="node__body">Pitch metres &#8594; Roblox studs.<span class="dot"></span>Z-up &#8594; Y-up.<span class="dot"></span>Pitch scale from new_game.</p>
+      </div>
+
+      <div class="node" style="grid-column:1/-1;">
+        <p class="node__title">[2.6] Data compression &amp; payload optimisation <span class="badge-new">New</span></p>
+        <p class="node__body">Per-joint positions removed from per-frame payload (bone lengths fixed on rig; manifest supplies offsets once) - approx. 40% saving.<span class="dot"></span>Delta compression: only changed values sent for low-fidelity entities.<span class="dot"></span>Zone-of-influence tiering: full quaternion joint data for entities near ball; state-level data (run/walk/idle + root position) for distant entities.<span class="dot"></span>Ball routed to separate physics-based interpolation path (see 4.4).</p>
+      </div>
+
+      <div class="node" style="grid-column:1/-1;">
+        <p class="node__title">[2.7] JSON format conversion - final processing step on the server <span class="badge-changed">Updated</span></p>
+        <p class="node__body">FrameRate set to 25 (source rate - no server-side upscaling) · Frames array · Joints object with quaternion rotations · Motor6D name mapping (case-sensitive).<span class="dot"></span>Bone offsets and scales omitted from per-frame output - manifest-once data.<span class="dot"></span>All previous transformations committed in the engine's native .exar form before serialisation to JSON.</p>
+      </div>
+
+      <div class="node" style="grid-column:1/-1;">
+        <p class="node__title">[2.8] Custom data processing engine</p>
+        <p class="node__body">Manages Rezzil .exar data in native format throughout the pipeline before JSON conversion at [2.7].<span class="dot"></span>Data reliability: detects and corrects erroneous Rezzil data (limbs deviating due to occlusion errors).<span class="dot"></span>Conflict resolution to establish ground truth per entity per frame.<span class="dot"></span>Zone-of-influence management - applies tiering logic for [2.6].</p>
+      </div>
+
+      <div class="node" style="grid-column:1/-1;">
+        <p class="node__title">[2.9] Observability <span class="badge-new">New</span></p>
+        <p class="node__body">Frame ingestion rate and gap count · per-frame processing latency vs. 50 ms budget · error correction rate (leading indicator of Rezzil degradation) · end-to-end latency via worldClock · worker health per active match.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- connector -->
+  <div class="connector-right">
+    <div class="inner">
+      <div class="label-col">compact JSON · 25 fps · quaternions · direct to Roblox</div>
+      <div class="connector-col">
+        <div class="connector__line"></div>
+        <div class="connector__arrow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       3.X — DELIVERY LAYER
+  ══════════════════════════════════════ -->
+  <p class="layer-label">3.X — Delivery Layer <span style="font-size:calc(var(--base)*0.78);font-weight:400;letter-spacing:0;text-transform:none;color:#6b7280;">· Direct AWS-to-Roblox</span></p>
+  <div class="layer">
+    <div class="node-grid">
+
+      <div class="node" style="grid-column:1/-1;">
+        <p class="node__title">[3.1] Direct delivery endpoint <span class="badge-changed">Replaced</span></p>
+        <p class="node__body">Processed JSON delivered directly from the AWS worker to Roblox - no intermediate middleware.<span class="dot"></span>Photon Realtime removed: wrong topology (single publisher, N read-only consumers; CCU model mismatched).<span class="dot"></span>Delivery architecture TBD: S3 object, REST endpoint, or WebSocket push.<span class="dot"></span>Roblox-side consumption TBD: HttpService polling or MemoryStoreService.<span class="dot"></span>Predictive / compression logic from original Photon proposal implemented in [2.6] and [2.8] instead.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- connector -->
+  <div class="connector-right">
+    <div class="inner">
+      <div class="label-col">final JSON delivered to Roblox · 3 s client-side buffer</div>
+      <div class="connector-col">
+        <div class="connector__line"></div>
+        <div class="connector__arrow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       4.X — ROBLOX GAME SERVER
+  ══════════════════════════════════════ -->
+  <p class="layer-label">4.X — Roblox Game Server · Server-side Lua</p>
+  <div class="layer">
+    <div class="node-grid">
+
+      <div class="node">
+        <p class="node__title">[4.1] Downloader script</p>
+        <p class="node__body">HttpService · pcall + RequestAsync fallback to GetAsync · JSONDecode direct to Lua table (bypasses 128 KB StringValue limit).</p>
+      </div>
+
+      <div class="node">
+        <p class="node__title">[4.2] AnimationDataInterface</p>
+        <p class="node__body">Stores decoded table · bridges 4.1 &#8594; 5.1 · broadcasts AnimationDataReady event.</p>
+      </div>
+
+      <div class="node">
+        <p class="node__title">[4.3] Default rig fallback</p>
+        <p class="node__body">Used when a player ID can't be matched (off-tracking, unknown ID, data loss).</p>
+      </div>
+
+      <div class="node">
+        <p class="node__title">[4.4] Ball entity <span class="badge-changed">Updated</span></p>
+        <p class="node__body">Position-only path (no joints) via PivotTo() on BasePart.<span class="dot"></span>Highest-priority entity: up to 30 m/s, 1+ m between frames.<span class="dot"></span>Requires physics-based ballistic interpolation client-side - not linear.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- connector -->
+  <div class="connector-right">
+    <div class="inner">
+      <div class="label-col">RemoteEvent broadcast · per-viewer fan-out</div>
+      <div class="connector-col">
+        <div class="connector__line"></div>
+        <div class="connector__arrow"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       5.X — ROBLOX CLIENT
+  ══════════════════════════════════════ -->
+  <p class="layer-label">5.X — Roblox Client · Per Viewer · RenderStepped 60 fps</p>
+  <div class="layer">
+    <div class="node-grid">
+
+      <div class="node">
+        <p class="node__title">[5.1] RemoteJsonAnimationPlayer <span class="badge-changed">Updated</span></p>
+        <p class="node__body">LocalScript · clones RemoteRig · dual accumulators · <strong>client-side upscaling 25 &#8594; 60 fps</strong> using engine-native curves · ballistic interpolation for ball.<span class="dot"></span>60 fps render.</p>
+      </div>
+
+      <div class="node">
+        <p class="node__title">[5.2] Motor6D joint transform <span class="badge-changed">Updated</span></p>
+        <p class="node__body">CFrame.new(x,y,z, qX,qY,qZ,qW) · quaternions applied directly - no Euler conversion · written to Motor6D.Transform (no API upload required).</p>
+      </div>
+
+      <div class="node">
+        <p class="node__title">[5.3] PivotTo() movement</p>
+        <p class="node__body">World position via MODEL:PivotTo()<span class="dot"></span>Y-axis rotation (RootRotY) for facing direction.<span class="dot"></span>30 fps movement accumulator.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       6.X — REPLAY HARNESS & DURABLE STATE
+  ══════════════════════════════════════ -->
+  <p class="layer-label" style="margin-top:18px;">6.X — Replay Harness &amp; Durable Session State <span class="badge-new">New</span></p>
+  <div class="layer">
+    <div class="node-grid">
+
+      <div class="node">
+        <p class="node__title">[6.1] Replay harness</p>
+        <p class="node__body">Records processed session data and replays it through the pipeline at controlled speed.<span class="dot"></span>Required for development and debugging - live feed cannot be paused or reproduced.<span class="dot"></span>Enables fan-facing replay feature (subject to commercial agreement).</p>
+      </div>
+
+      <div class="node">
+        <p class="node__title">[6.2] Durable session state</p>
+        <p class="node__body">Persists match metadata, entity manifest, and per-frame position/rotation stream.<span class="dot"></span>Grows a re-renderable match asset library.<span class="dot"></span>Storage format, retention policy, and access model TBD.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       BOTTOM BAR
+  ══════════════════════════════════════ -->
+  <div class="bottom-bar">
+    <div class="logo-wrap">
+      <span class="accent-dot">·</span>
+      <span class="logo-text">LIVESYNC</span>
+    </div>
+    <span style="font-weight:400;letter-spacing:0.04em;">System Architecture &nbsp;·&nbsp; Ver 0.3 &nbsp;·&nbsp; Internal draft &nbsp;·&nbsp; Not for distribution</span>
+    <span>1</span>
+  </div>
+
+</body>
+</html>
